@@ -70,6 +70,13 @@ const cardData = [
 
 const LandingPage = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [activeCard, setActiveCard] = useState<number | null>(null);
+
+  const handleCardClick = (id: number) => {
+    if (window.innerWidth < 768) {
+      setActiveCard(activeCard === id ? null : id);
+    }
+  };
 
   return (
     <div className="h-screen overflow-hidden relative">
@@ -245,7 +252,7 @@ const LandingPage = () => {
                   incrementa año tras año por la ausencia de políticas
                   sanitarias y veterinarias.
                 </p>
-                <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-5/6 w-4/6"></div>
+                <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-5/6 w-[320px]"></div>
               </motion.div>
             </motion.div>
           </div>
@@ -275,7 +282,7 @@ const LandingPage = () => {
               segura, proporcionando toda la información necesaria sobre cada
               gatito, conectando con adoptantes responsables.
             </p>
-            <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-3/6 w-2/6"></div>
+            <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-3/6 w-[180px]"></div>
           </motion.div>
 
           {/* CARDS */}
@@ -289,67 +296,77 @@ const LandingPage = () => {
             <h2 className="md:text-2xl text-l font-fredoka font-light text-center">
               Vas a poder encontrar los siguientes beneficios:
             </h2>
+            <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full m-auto md:mt-4 mt-2 md:w-5/6 w-[320px]"></div>
           </motion.div>
 
           <div className="w-full md:max-w-6xl items-center mx-auto md:mb-72 mb-36">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              {cardData.map((card, index) => (
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        {cardData.map((card, index) => (
+          <motion.div
+            key={card.id}
+            onHoverStart={() => setHoveredCard(card.id)}
+            onHoverEnd={() => setHoveredCard(null)}
+            onClick={() => handleCardClick(card.id)}
+            whileHover={{
+              scale: 1.04,
+              boxShadow: "0 0 10px rgba(232, 20, 184, 0.5)",
+              transition: { duration: 0.5 },
+            }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ amount: 0.2 }}
+            variants={cardVariant}
+            custom={index}
+            className="rounded-3xl overflow-hidden"
+          >
+            <Card
+              className={`md:w-full md:h-72 w-3/4 h-64 rounded-3xl mx-auto px-2 ${
+                activeCard === card.id ? "shadow-lg" : ""
+              }`}
+              isBlurred
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
+              }}
+            >
+              <CardHeader className="flex flex-col items-center space-y-2 md:mt-4 mt-2">
                 <motion.div
-                  key={card.id}
-                  onHoverStart={() => setHoveredCard(card.id)}
-                  onHoverEnd={() => setHoveredCard(null)}
-                  whileHover={{
-                    scale: 1.04,
-                    boxShadow: "0 0 10px rgba(232, 20, 184, 0.5)",
-                    transition: { duration: 0.5 },
-                  }}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ amount: 0.2 }}
-                  variants={cardVariant}
-                  custom={index}
-                  className="rounded-3xl overflow-hidden"
+                  className={`flex items-center justify-center w-12 h-12 md:mb-2 mb-2 bg-secondary/30 rounded-full ${
+                    hoveredCard === card.id || activeCard === card.id
+                      ? "shadow-icon"
+                      : ""
+                  }`}
                 >
-                  <Card
-                    className="md:w-full md:h-72 w-3/4 h-64 rounded-3xl mx-auto px-2"
-                    isBlurred
-                    style={{
-                      background:
-                        "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
-                    }}
-                  >
-                    <CardHeader className="flex flex-col items-center space-y-2 md:mt-4 mt-2">
-                      <motion.div
-                        className={`flex items-center justify-center w-12 h-12 md:mb-2 mb-2 bg-secondary/30 rounded-full ${
-                          hoveredCard === card.id ? "shadow-icon" : ""
-                        }`}
-                      >
-                        <Icon
-                          path={card.icon}
-                          size={1.5}
-                          color={
-                            hoveredCard === card.id ? "#e814b8" : "#5e35b1"
-                          }
-                        />
-                      </motion.div>
-                      <motion.h3
-                        className={`text-secondary text-xl md:text-2xl font-ubuntu font-semibold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-white ${
-                          hoveredCard === card.id ? "shadow-text" : ""
-                        }`}
-                      >
-                        {card.title}
-                      </motion.h3>
-                    </CardHeader>
-                    <CardBody className="flex items-center space-y-6">
-                      <p className="text-white font-fredoka text-center text-l p-1">
-                        {card.description}
-                      </p>
-                    </CardBody>
-                  </Card>
+                  <Icon
+                    path={card.icon}
+                    size={1.5}
+                    color={
+                      hoveredCard === card.id || activeCard === card.id
+                        ? "#e814b8"
+                        : "#5e35b1"
+                    }
+                  />
                 </motion.div>
-              ))}
-            </div>
-          </div>
+                <motion.h3
+                  className={`text-secondary text-xl md:text-2xl font-ubuntu font-semibold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-white ${
+                    hoveredCard === card.id || activeCard === card.id
+                      ? "shadow-text"
+                      : ""
+                  }`}
+                >
+                  {card.title}
+                </motion.h3>
+              </CardHeader>
+              <CardBody className="flex items-center space-y-6">
+                <p className="text-white font-fredoka text-center text-l p-1">
+                  {card.description}
+                </p>
+              </CardBody>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </div>
 
           {/* SECCIÓN ESTADÍSTICAS */}
           <div className="w-full max-w-6xl p-0 md:mb-56 mb-24 md:ml-24">
@@ -362,7 +379,10 @@ const LandingPage = () => {
                 className="flex flex-col md:flex-row items-center justify-center mb-8 md:mb-0  md:mr-24 space-x-2"
               >
                 <div className="flex items-center justify-center space-x-2 mb-4">
-                  <p className="md:text-6xl text-5xl font-fredoka text-secondary">
+                  <p
+                    className="md:text-6xl text-5xl font-fredoka text-secondary relative"
+                    style={{ top: "-0.125em" }}
+                  >
                     +
                   </p>
                   <p className="md:text-2xl text-xl font-fredoka font-light">
@@ -386,7 +406,10 @@ const LandingPage = () => {
                 className="flex flex-col md:flex-row items-center justify-center mb-8 md:mb-0  md:mr-24 space-x-2"
               >
                 <div className="flex items-center justify-center space-x-2 mb-4">
-                  <p className="md:text-6xl text-5xl font-fredoka text-secondary">
+                  <p
+                    className="md:text-6xl text-5xl font-fredoka text-secondary relative"
+                    style={{ top: "-0.125em" }}
+                  >
                     +
                   </p>
                   <p className="md:text-2xl text-xl font-fredoka font-light">
@@ -460,7 +483,7 @@ const LandingPage = () => {
                 </div>
                 <div className="flex flex-col items-center justify-center p-4 w-4/5">
                   <p className="text-2xl font-fredoka text-white mb-4">
-                    Registrarse ahora
+                    Regístrate ahora!
                   </p>
                   <NextUIButton
                     as={motion.button}
