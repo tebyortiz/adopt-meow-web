@@ -10,13 +10,13 @@ import {
 import { motion } from "framer-motion";
 import Icon from "@mdi/react";
 import {
-  mdiMapSearchOutline,
   mdiTagHeartOutline,
-  mdiFileDocumentOutline,
   mdiHandshakeOutline,
   mdiLightbulbOutline,
   mdiAccountHeartOutline,
   mdiMapMarkerRadiusOutline,
+  mdiPawOutline,
+  mdiHeartSearch,
 } from "@mdi/js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,14 +37,14 @@ const cardVariant = {
 const cardData = [
   {
     id: 1,
-    icon: mdiMapSearchOutline,
+    icon: mdiHeartSearch,
     title: "GEOLOCALIZACIÓN",
     description:
       "A través de un mapa interactivo, podrás encontrar gatitos cercanos a ti y postularte para su adopción.",
   },
   {
     id: 2,
-    icon: mdiFileDocumentOutline,
+    icon: mdiPawOutline,
     title: "MICHIPERFIL",
     description:
       'Podrás ver la foto y los datos del gatito en su "MichiPerfil" con sus características más importantes.',
@@ -162,7 +162,7 @@ const LandingPage = () => {
                 incrementa año tras año por la ausencia de políticas sanitarias
                 y veterinarias.
               </p>
-              <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-5/6 w-0"></div>
+              <div className="h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-5/6 w-5/6"></div>
             </motion.div>
           </motion.div>
         </div>
@@ -192,7 +192,7 @@ const LandingPage = () => {
             proporcionando toda la información necesaria sobre cada gatito,
             conectando con adoptantes responsables.
           </p>
-          <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-3/6 w-0"></div>
+          <div className=" h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-3/6 w-3/6"></div>
         </motion.div>
 
         {/* CARDS */}
@@ -206,7 +206,7 @@ const LandingPage = () => {
           <h2 className="md:text-2xl text-l font-fredoka font-light text-center">
             Vas a poder encontrar los siguientes beneficios:
           </h2>
-          <div className="w-full h-px bg-gradient-to-r from-secondary to-white rounded-full m-auto md:mt-4 mt-2 md:w-5/6 w-[320px]"></div>
+          <div className="h-px bg-gradient-to-r from-secondary to-white rounded-full m-auto md:mt-4 mt-2 md:w-5/6 w-5/6"></div>
         </motion.div>
 
         <div className="w-full md:max-w-6xl items-center mx-auto md:mb-72 mb-36">
