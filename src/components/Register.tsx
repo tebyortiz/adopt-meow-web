@@ -6,6 +6,7 @@ import {
   mdiLinkBoxVariantOutline,
   mdiEye,
   mdiEyeOff,
+  mdiLogin,
 } from "@mdi/js";
 import { motion } from "framer-motion";
 import { Card, Input, Button as NextUIButton } from "@nextui-org/react";
@@ -89,7 +90,7 @@ const Register = () => {
           className="w-full md:w-1/2 m-auto mb-2"
         >
           <Card
-            className="p-8 space-y-4 md:w-4/6 w-5/6 rounded-3xl m-auto md:ml-48"
+            className="p-8 space-y-4 md:w-4/6 w-5/6 rounded-3xl m-auto md:ml-48 relative z-10"
             isBlurred
             style={{
               background:
@@ -369,20 +370,50 @@ const Register = () => {
               color="secondary"
               href="#"
               radius="lg"
-              className="text-white text-2xl w-full m-auto font-fredoka p-8"
+              className="text-white text-2xl w-full font-semibold m-auto font-fredoka p-8"
               style={{
                 background:
                   "linear-gradient(to right, rgba(225, 0, 255, 0.4), rgba(127, 0, 255, 0.4))",
               }}
             >
-              Registrarse
+              Crear Cuenta
             </NextUIButton>
           </motion.div>
         </div>
       </div>
 
       {/* INFO Y T&C */}
-      <h1 className="md:text-xl text-center font-fredoka text-white mb-24 px-8">
+      <h1 className="md:text-xl text-center font-fredoka text-white md:mb-24 mb-24 px-8">
+        <span className="flex items-center justify-center">
+          ¿Ya tienes una cuenta?{" "}
+          <a
+            href=""
+            className="font-semibold transition-colors duration-300 ml-2 md:ml-3 flex items-center text-transparent bg-clip-text"
+            style={{
+              backgroundImage: "linear-gradient(to right, #e100ff, #7f00ff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Ingresar
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="url(#gradient1)"
+              className="md:w-8 md:h-8 w-6 h-6 mt-1"
+            >
+              <defs>
+                <linearGradient id="gradient1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#e100ff" />
+                  <stop offset="100%" stopColor="#7f00ff" />
+                </linearGradient>
+              </defs>
+              <path d={mdiLogin} />
+            </svg>
+          </a>
+        </span>
+      </h1>
+      <h1 className="md:text-xl text-center font-fredoka text-white mb-12 px-8">
         Al registrarte, aceptas los{" "}
         <a
           href=""
@@ -392,7 +423,7 @@ const Register = () => {
         </a>{" "}
         de uso del servicio de AdoptMeow.
       </h1>
-      <h1 className="md:text-l text-center font-opensans text-white mb-24 px-8">
+      <h1 className="md:text-l text-center font-opensans text-white mb-12 px-8">
         AdoptMeow 2024. Todos los derechos registrados. propiedad de Piwi S.A.
       </h1>
     </div>
