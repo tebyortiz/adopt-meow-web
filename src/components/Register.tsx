@@ -11,8 +11,9 @@ import {
 import { motion } from "framer-motion";
 import { Card, Input, Button as NextUIButton } from "@nextui-org/react";
 import { useState } from "react";
-import catImage from "/public/cat1.png";
-import adoptImage from "/public/adopt1.png";
+import catImage from "/cat1.png";
+import adoptImage from "/adopt1.png";
+import checkImage from "/check.png";
 
 const cardVariant = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -194,15 +195,8 @@ const Register = () => {
                 }
                 size="lg"
                 color="secondary"
-                placeholder=""
+                placeholder="https://"
                 labelPlacement="outside"
-                startContent={
-                  <div className="pointer-events-none">
-                    <span className="text-default-400 text-medium font-light">
-                      https://
-                    </span>
-                  </div>
-                }
                 endContent={
                   <Icon
                     path={mdiLinkBoxVariantOutline}
@@ -231,7 +225,7 @@ const Register = () => {
             variants={cardVariant}
           >
             <Card
-              className="p-8 space-y-6 rounded-3xl "
+              className="p-8 space-y-6 rounded-3xl"
               isBlurred
               style={{
                 background:
@@ -259,6 +253,16 @@ const Register = () => {
                     }`}
                     onClick={() => setSelectedOption("postular")}
                   >
+                    {selectedOption === "postular" && (
+                      <motion.img
+                        src={checkImage}
+                        alt="Check"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="absolute top-1 right-1 w-12 h-12 z-50"
+                      />
+                    )}
                     <motion.p
                       initial={{
                         color: "rgba(255, 255, 255, 0.4)",
@@ -270,7 +274,7 @@ const Register = () => {
                             : "rgba(255, 255, 255, 0.4)",
                       }}
                       transition={{ duration: 0.5 }}
-                      className="text-2xl font-fredoka font-semibold m-auto"
+                      className="text-xl font-fredoka font-semibold md:mr-8"
                     >
                       Postular un gatito
                     </motion.p>
@@ -308,6 +312,16 @@ const Register = () => {
                     }`}
                     onClick={() => setSelectedOption("adoptar")}
                   >
+                    {selectedOption === "adoptar" && (
+                      <motion.img
+                        src={checkImage}
+                        alt="Check"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="absolute top-1 right-1 w-12 h-12 z-50"
+                      />
+                    )}
                     <motion.p
                       initial={{
                         color: "rgba(255, 255, 255, 0.4)",
@@ -319,7 +333,7 @@ const Register = () => {
                             : "rgba(255, 255, 255, 0.4)",
                       }}
                       transition={{ duration: 0.5 }}
-                      className="text-2xl font-fredoka font-semibold m-auto"
+                      className="text-xl font-fredoka font-semibold md:mr-8"
                     >
                       Adoptar un gatito
                     </motion.p>
