@@ -14,6 +14,7 @@ import { useState } from "react";
 import catImage from "/cat1.png";
 import adoptImage from "/adopt1.png";
 import checkImage from "/check.png";
+import { useNavigate } from "react-router-dom";
 
 const cardVariant = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -29,6 +30,7 @@ const cardVariant = {
 };
 
 const Register = () => {
+  const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<
     "postular" | "adoptar" | null
   >(null);
@@ -80,7 +82,7 @@ const Register = () => {
         </motion.div>
       </div>
 
-      <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto md:ml-72 md:mt-24 mt-12 md:mb-24 mb-24 space-y-4 md:space-y-0 md:space-x-6">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto md:ml-72 md:mt-12 mt-12 md:mb-12 mb-24 space-y-4 md:space-y-0 md:space-x-6">
         {/* FORMULARIO*/}
         <motion.div
           initial="hidden"
@@ -95,84 +97,30 @@ const Register = () => {
             isBlurred
             style={{
               background:
-                "linear-gradient(to left, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
+                "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
             }}
           >
-            <h1 className="text-2xl text-center font-fredoka font-semibold text-transparent bg-clip-text bg-gradient-to-l from-secondary to-white">
-              Datos de Usuario
-            </h1>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="space-y-4"
+            >
+              <h1 className="md:text-3xl text-2xl text-left font-fredoka font-semibold text-transparent bg-clip-text bg-gradient-to-l from-secondary to-white">
+                Datos de Usuario
+              </h1>
 
-            <div className="w-full flex flex-row flex-wrap gap-4">
-              <Input
-                type="text"
-                label={<span className="text-white">Nombre Completo</span>}
-                size="lg"
-                color="secondary"
-                placeholder="Nombre y Apellido"
-                labelPlacement="outside"
-                endContent={
-                  <Icon
-                    path={mdiAccountDetails}
-                    size={1.5}
-                    className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
-                    style={{
-                      filter: "drop-shadow(0 0 10px rgba(232, 20, 184, 0.9))",
-                      color: "#e814b8",
-                    }}
-                  />
-                }
-                variant="bordered"
-                className="mb-0 text-white font-fredoka font-semibold"
-              />
-            </div>
-
-            <div className="w-full flex flex-row flex-wrap gap-48">
-              <Input
-                type="email"
-                label={<span className="text-white">Email</span>}
-                size="lg"
-                color="secondary"
-                placeholder="you@example.com"
-                labelPlacement="outside"
-                endContent={
-                  <Icon
-                    path={mdiEmail}
-                    size={1.5}
-                    className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
-                    style={{
-                      filter: "drop-shadow(0 0 10px rgba(232, 20, 184, 0.9))",
-                      color: "#e814b8",
-                    }}
-                  />
-                }
-                variant="bordered"
-                className="mb-0 text-white font-fredoka font-semibold"
-              />
-            </div>
-
-            <div className="w-full flex flex-row flex-wrap gap-48">
-              <Input
-                type={isPasswordVisible ? "text" : "password"}
-                label={<span className="text-white">Contraseña</span>}
-                size="lg"
-                color="secondary"
-                placeholder="mín. 6 carácteres"
-                labelPlacement="outside"
-                endContent={
-                  <div className="flex items-center">
-                    <button
-                      type="button"
-                      onClick={togglePasswordVisibility}
-                      className="mr-2 text-secondary-600"
-                    >
-                      <Icon
-                        path={isPasswordVisible ? mdiEyeOff : mdiEye}
-                        size={0.8}
-                        className="text-secondary"
-                      />
-                    </button>
+              <div className="w-full flex flex-row flex-wrap gap-4">
+                <Input
+                  type="text"
+                  label={<span className="text-white">Nombre Completo</span>}
+                  size="lg"
+                  color="secondary"
+                  placeholder="Nombre y Apellido"
+                  labelPlacement="outside"
+                  endContent={
                     <Icon
-                      path={mdiKey}
+                      path={mdiAccountDetails}
                       size={1.5}
                       className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
                       style={{
@@ -180,38 +128,102 @@ const Register = () => {
                         color: "#e814b8",
                       }}
                     />
-                  </div>
-                }
-                variant="bordered"
-                className="mb-0 text-white font-fredoka font-semibold"
-              />
-            </div>
+                  }
+                  variant="bordered"
+                  className="mb-0 text-white font-fredoka font-semibold"
+                />
+              </div>
 
-            <div className="w-full flex flex-row flex-wrap gap-48">
-              <Input
-                type="url"
-                label={
-                  <span className="text-white">Url de la imagen de perfil</span>
-                }
-                size="lg"
-                color="secondary"
-                placeholder="https://"
-                labelPlacement="outside"
-                endContent={
-                  <Icon
-                    path={mdiLinkBoxVariantOutline}
-                    size={1.5}
-                    className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
-                    style={{
-                      filter: "drop-shadow(0 0 10px rgba(232, 20, 184, 0.9))",
-                      color: "#e814b8",
-                    }}
-                  />
-                }
-                variant="bordered"
-                className="mb-0 text-white font-fredoka font-semibold"
-              />
-            </div>
+              <div className="w-full flex flex-row flex-wrap gap-48">
+                <Input
+                  type="email"
+                  label={<span className="text-white">Email</span>}
+                  size="lg"
+                  color="secondary"
+                  placeholder="you@example.com"
+                  labelPlacement="outside"
+                  endContent={
+                    <Icon
+                      path={mdiEmail}
+                      size={1.5}
+                      className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
+                      style={{
+                        filter: "drop-shadow(0 0 10px rgba(232, 20, 184, 0.9))",
+                        color: "#e814b8",
+                      }}
+                    />
+                  }
+                  variant="bordered"
+                  className="mb-0 text-white font-fredoka font-semibold"
+                />
+              </div>
+
+              <div className="w-full flex flex-row flex-wrap gap-48">
+                <Input
+                  type={isPasswordVisible ? "text" : "password"}
+                  label={<span className="text-white">Contraseña</span>}
+                  size="lg"
+                  color="secondary"
+                  placeholder="mín. 6 carácteres"
+                  labelPlacement="outside"
+                  endContent={
+                    <div className="flex items-center">
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="mr-2 text-secondary-600"
+                      >
+                        <Icon
+                          path={isPasswordVisible ? mdiEyeOff : mdiEye}
+                          size={0.8}
+                          className="text-secondary"
+                        />
+                      </button>
+                      <Icon
+                        path={mdiKey}
+                        size={1.5}
+                        className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
+                        style={{
+                          filter:
+                            "drop-shadow(0 0 10px rgba(232, 20, 184, 0.9))",
+                          color: "#e814b8",
+                        }}
+                      />
+                    </div>
+                  }
+                  variant="bordered"
+                  className="mb-0 text-white font-fredoka font-semibold"
+                />
+              </div>
+
+              <div className="w-full flex flex-row flex-wrap gap-48">
+                <Input
+                  type="url"
+                  label={
+                    <span className="text-white">
+                      Url de la imagen de perfil
+                    </span>
+                  }
+                  size="lg"
+                  color="secondary"
+                  placeholder="https://"
+                  labelPlacement="outside"
+                  endContent={
+                    <Icon
+                      path={mdiLinkBoxVariantOutline}
+                      size={1.5}
+                      className="text-4xl text-secondary-600 pointer-events-none flex-shrink-0"
+                      style={{
+                        filter: "drop-shadow(0 0 10px rgba(232, 20, 184, 0.9))",
+                        color: "#e814b8",
+                      }}
+                    />
+                  }
+                  variant="bordered"
+                  className="mb-0 text-white font-fredoka font-semibold"
+                />
+              </div>
+            </motion.div>
           </Card>
         </motion.div>
 
@@ -221,7 +233,7 @@ const Register = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ amount: 0.5 }}
-            transition={{ duration: 1.2, delay: 0.4 }}
+            transition={{ duration: 1.8, delay: 0.5 }}
             variants={cardVariant}
           >
             <Card
@@ -229,11 +241,16 @@ const Register = () => {
               isBlurred
               style={{
                 background:
-                  "linear-gradient(to left, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
+                  "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
               }}
             >
-              <div className="space-y-2 items-center max-w-6xl">
-                <h2 className="text-2xl text-center font-fredoka font-semibold text-transparent bg-clip-text bg-gradient-to-l from-secondary to-white mb-8 md:mb-10">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.5 }}
+                className="space-y-2 items-center max-w-6xl"
+              >
+                <h2 className="md:text-3xl text-2xl text-left font-fredoka font-semibold text-transparent bg-clip-text bg-gradient-to-l from-secondary to-white mb-8 md:mb-10">
                   Deseo:
                 </h2>
                 <div className="flex gap-4 md:flex-row flex-col">
@@ -356,16 +373,15 @@ const Register = () => {
                     </motion.div>
                   </Card>
                 </div>
-              </div>
+              </motion.div>
             </Card>
           </motion.div>
 
           {/* BOTÓN DE REGISTRO */}
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ amount: 0.5 }}
-            transition={{ duration: 1.4, delay: 0.6 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
             variants={cardVariant}
           >
             <NextUIButton
@@ -390,31 +406,42 @@ const Register = () => {
                   "linear-gradient(to right, rgba(225, 0, 255, 0.4), rgba(127, 0, 255, 0.4))",
               }}
             >
-              Crear Cuenta
+              <div className="flex items-center justify-center text-3xl">
+                Crear Cuenta
+                <img
+                  src="/thumbs.png"
+                  alt="thumbs"
+                  className="ml-4 h-9 w-auto mb-1 opacity-60"
+                  style={{
+                    filter: "drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.5))",
+                  }}
+                />
+              </div>
             </NextUIButton>
           </motion.div>
         </div>
       </div>
 
       {/* INFO Y T&C */}
-      <h1 className="md:text-xl text-center font-fredoka text-white md:mb-24 mb-24 px-8">
-        <span className="flex items-center justify-center">
+      <h1 className="md:text-xl text-center font-fredoka text-white md:mt-16 md:mb-24 mb-24 px-8">
+        <span className="flex flex-col md:flex-row items-center justify-center">
           ¿Ya tienes una cuenta?{" "}
           <a
             href=""
-            className="font-semibold transition-colors duration-300 ml-2 md:ml-3 flex items-center text-transparent bg-clip-text"
+            className="font-semibold text-2xl transition-colors duration-300 ml-2 md:ml-3 flex items-center text-transparent bg-clip-text my-2"
             style={{
               backgroundImage: "linear-gradient(to right, #e100ff, #7f00ff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
+            onClick={() => navigate("/login")}
           >
             Ingresar
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="url(#gradient1)"
-              className="md:w-8 md:h-8 w-6 h-6 mt-1"
+              className="md:w-8 md:h-8 w-8 h-8 md:ml-2 ml-1"
             >
               <defs>
                 <linearGradient id="gradient1" x1="0" y1="0" x2="1" y2="1">
