@@ -162,7 +162,7 @@ const LandingPage = () => {
                 incrementa año tras año por la ausencia de políticas sanitarias
                 y veterinarias.
               </p>
-              <div className="h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-5/6 w-5/6"></div>
+              <div className="h-1 bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-5/6 w-5/6"></div>
             </motion.div>
           </motion.div>
         </div>
@@ -192,7 +192,7 @@ const LandingPage = () => {
             proporcionando toda la información necesaria sobre cada gatito,
             conectando con adoptantes responsables.
           </p>
-          <div className=" h-px bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-3/6 w-3/6"></div>
+          <div className=" h-1 bg-gradient-to-r from-secondary to-white rounded-full md:mt-8 mt-2 md:w-3/6 w-3/6"></div>
         </motion.div>
 
         {/* CARDS */}
@@ -206,7 +206,7 @@ const LandingPage = () => {
           <h2 className="md:text-2xl text-l font-fredoka font-light text-center">
             Vas a poder encontrar los siguientes beneficios:
           </h2>
-          <div className="h-px bg-gradient-to-r from-secondary to-white rounded-full m-auto md:mt-4 mt-2 md:w-5/6 w-5/6"></div>
+          <div className="h-1 bg-gradient-to-r from-secondary to-white rounded-full m-auto md:mt-4 mt-2 md:w-5/6 w-5/6"></div>
         </motion.div>
 
         <div className="w-full md:max-w-6xl items-center mx-auto md:mb-72 mb-36">
@@ -239,7 +239,7 @@ const LandingPage = () => {
                       "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
                   }}
                 >
-                  <CardHeader className="flex flex-col items-center space-y-2 md:mt-4 mt-2">
+                  <CardHeader className="flex flex-col items-center space-y-2 md:mt-2 mt-2">
                     <motion.div
                       className={`flex items-center justify-center w-12 h-12 md:mb-2 mb-2 bg-secondary/30 rounded-full ${
                         hoveredCard === card.id || activeCard === card.id
@@ -267,7 +267,13 @@ const LandingPage = () => {
                       {card.title}
                     </motion.h3>
                   </CardHeader>
-                  <CardBody className="flex items-center space-y-6">
+                  <CardBody
+                    className="flex items-center space-y-6 rounded-3x1 rounded-t-3xl rounded-b-3xl h-auto"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
+                    }}
+                  >
                     <p className="text-white font-fredoka text-center text-l p-1">
                       {card.description}
                     </p>
@@ -378,7 +384,7 @@ const LandingPage = () => {
               className="flex flex-col items-center md:items-center md:w-5/5 p-8 mx-2 rounded-3xl min-h-[240px] shadow-xl transform transition duration-500 hover:scale-105 hover:shadow-2xl"
               style={{
                 background:
-                  "linear-gradient(to left, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
+                  "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
               }}
             >
               <div className="flex items-center mb-8">
@@ -391,7 +397,13 @@ const LandingPage = () => {
                   AdoptMeow
                 </p>
               </div>
-              <div className="flex flex-col items-center justify-center p-4 w-4/5">
+              <div
+                className="flex flex-col items-center justify-center p-4 w-4/5 rounded-3xl bg-opacity-20"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(255, 192, 203, 0.2))",
+                }}
+              >
                 <p className="text-2xl font-fredoka text-white mb-4">
                   Regístrate ahora!
                 </p>

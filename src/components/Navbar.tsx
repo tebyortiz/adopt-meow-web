@@ -59,6 +59,7 @@ const Navbar = () => {
               href="#"
               variant="bordered"
               className="text-white rounded-full font-fredoka"
+              onClick={() => navigate("/login")}
             >
               Login
             </NextUIButton>
