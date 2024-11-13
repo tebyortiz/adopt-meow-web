@@ -5,9 +5,11 @@ import Register from "./components/Register";
 import Navbar from "./components/Navbar";
 import './App.css'
 import Login from "./components/Login";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
   return (
+    <AuthProvider>
     <Layout>
       <Navbar />
       <Routes>
@@ -16,6 +18,7 @@ function App() {
         <Route path="/login" Component={Login} />
       </Routes>
     </Layout>
+    </AuthProvider>
   );
 }
 
