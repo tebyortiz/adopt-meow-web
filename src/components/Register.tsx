@@ -10,11 +10,13 @@ import {
 } from "@mdi/js";
 import { motion } from "framer-motion";
 import { Card, Input, Button as NextUIButton } from "@nextui-org/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import catImage from "/cat1.png";
 import adoptImage from "/adopt1.png";
 import checkImage from "/check.png";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+import { UserRegistrationData } from "../models/UserRegistrationData";
 
 const cardVariant = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -31,14 +33,119 @@ const cardVariant = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { signup, authErrors, clearErrors } = useAuth();
   const [selectedOption, setSelectedOption] = useState<
     "postular" | "adoptar" | null
   >(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [adopterSelected, setAdopterSelected] = useState(false);
+  const [_ownerSelected, setOwnerSelected] = useState(true);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFormComplete, setIsFormComplete] = useState(false);
+  const [showAuthErrors, setShowAuthErrors] = useState(false);
+  const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
+
+  const resetStates = useCallback(() => {
+    clearErrors();
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setImageUrl("");
+    setRegistrationSuccess(false);
+    setShowAuthErrors(false);
+    setShowRegistrationSuccess(false);
+  }, [clearErrors]);
+
+  useEffect(() => {
+    resetStates();
+  }, [resetStates]);
+
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleImageUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImageUrl(event.target.value);
+  };
+
+  const handleAdopterSelect = () => {
+    setAdopterSelected(true);
+    setOwnerSelected(false);
+  };
+
+  const handleOwnerSelect = () => {
+    setAdopterSelected(false);
+    setOwnerSelected(true);
+  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
+  const handleRegister = async () => {
+    const userData: UserRegistrationData = {
+      username,
+      email,
+      password,
+      image: imageUrl,
+      userType: adopterSelected ? "adopter" : "owner",
+    };
+    console.log("User data being sent to signup:", userData);
+
+    try {
+      const signupResponse = await signup(userData);
+      console.log("Signup response", signupResponse);
+      setRegistrationSuccess(true);
+      setShowRegistrationSuccess(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate("/Login");
+      }, 2000);
+    } catch (error) {
+      setRegistrationSuccess(false);
+    }
+  };
+
+  useEffect(() => {
+    setIsFormComplete(
+      username !== "" &&
+        email !== "" &&
+        password !== "" &&
+        imageUrl !== "" &&
+        selectedOption !== null
+    );
+  }, [username, email, password, imageUrl, selectedOption]);
+
+  useEffect(() => {
+    if (authErrors.length > 0) {
+      setShowAuthErrors(true);
+      setTimeout(() => {
+        setShowAuthErrors(false);
+      }, 3000);
+    }
+  }, [authErrors]);
+
+  useEffect(() => {
+    if (registrationSuccess) {
+      setShowRegistrationSuccess(true);
+      setTimeout(() => {
+        setShowRegistrationSuccess(false);
+      }, 3000);
+    }
+  }, [registrationSuccess]);
 
   return (
     <div>
@@ -82,7 +189,7 @@ const Register = () => {
         </motion.div>
       </div>
 
-      <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto md:ml-72 md:mt-12 mt-12 md:mb-12 mb-24 space-y-4 md:space-y-0 md:space-x-6">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto md:ml-72 md:mt-12 mt-12 md:mb-12 md:mb-4 mb-6 space-y-4 md:space-y-0 md:space-x-6">
         {/* FORMULARIO*/}
         <motion.div
           initial="hidden"
@@ -131,6 +238,8 @@ const Register = () => {
                   }
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
               </div>
 
@@ -155,6 +264,8 @@ const Register = () => {
                   }
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
+                  value={email}
+                  onChange={handleEmailChange}
                 />
               </div>
 
@@ -193,6 +304,8 @@ const Register = () => {
                   }
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </div>
 
@@ -221,6 +334,8 @@ const Register = () => {
                   }
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
+                  value={imageUrl}
+                  onChange={handleImageUrlChange}
                 />
               </div>
             </motion.div>
@@ -255,6 +370,7 @@ const Register = () => {
                 </h2>
                 <div className="flex gap-4 md:flex-row flex-col">
                   <Card
+                    onPress={handleOwnerSelect}
                     isPressable
                     isHoverable
                     style={{
@@ -314,6 +430,7 @@ const Register = () => {
                     </motion.div>
                   </Card>
                   <Card
+                    onPress={handleAdopterSelect}
                     isPressable
                     isHoverable
                     style={{
@@ -386,6 +503,8 @@ const Register = () => {
           >
             <NextUIButton
               as={motion.button}
+              isDisabled={!isFormComplete || isLoading}
+              onPress={handleRegister}
               whileHover={{
                 scale: 1,
                 background:
@@ -422,8 +541,29 @@ const Register = () => {
         </div>
       </div>
 
+      {showAuthErrors && authErrors.length > 0 && (
+        <div className="md:w-3/6 w-5/6 m-auto items-center justify-center p-2 rounded-2xl bg-danger bg-opacity-40">
+          {authErrors.map((error, index) => (
+            <p
+              key={index}
+              className="text-white font-fredoka text-l font-light text-center"
+            >
+              {error.message}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {showRegistrationSuccess && registrationSuccess && (
+        <div className="md:w-3/6 w-5/6 m-auto items-center justify-center p-2 rounded-2xl bg-success bg-opacity-40">
+          <p className="text-white font-fredoka text-l font-light text-center">
+            Registro Exitoso
+          </p>
+        </div>
+      )}
+      
       {/* INFO Y T&C */}
-      <h1 className="md:text-xl text-center font-fredoka text-white md:mt-16 md:mb-24 mb-24 px-8">
+      <h1 className="md:text-xl text-center font-fredoka text-white md:mt-24 mt-24 md:mb-24 mb-24 px-8">
         <span className="flex flex-col md:flex-row items-center justify-center">
           ¿Ya tienes una cuenta?{" "}
           <a
