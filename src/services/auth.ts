@@ -47,3 +47,15 @@ export const verifyTokenRequest = async (token: string) => {
     throw error;
   }
 };
+
+export const loginRequest = async (user: UserRegistrationData) => {
+  try {
+    //console.log("Enviando datos de inicio de sesión:", user);
+    const response = await axios.post(`/login`, user);
+    //console.log("Respuesta del servidor al iniciar sesión:", response);
+    return response;
+  } catch (error) {
+    //console.error("Error en loginRequest:", error);
+    throw error;
+  }
+};

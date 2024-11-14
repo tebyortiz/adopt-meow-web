@@ -111,7 +111,7 @@ const Register = () => {
       setRegistrationSuccess(true);
       setShowRegistrationSuccess(true);
       setTimeout(() => {
-        setIsLoading(false);
+        setIsLoading(true);
         navigate("/Login");
       }, 2000);
     } catch (error) {
@@ -542,7 +542,7 @@ const Register = () => {
       </div>
 
       {showAuthErrors && authErrors.length > 0 && (
-        <div className="md:w-3/6 w-5/6 m-auto items-center justify-center p-2 rounded-2xl bg-danger bg-opacity-40">
+        <div className="md:w-1/6 w-5/6 m-auto items-center justify-center p-4 rounded-2xl bg-danger bg-opacity-40">
           {authErrors.map((error, index) => (
             <p
               key={index}
@@ -555,13 +555,13 @@ const Register = () => {
       )}
 
       {showRegistrationSuccess && registrationSuccess && (
-        <div className="md:w-3/6 w-5/6 m-auto items-center justify-center p-2 rounded-2xl bg-success bg-opacity-40">
+        <div className="md:w-3/6 w-5/6 m-auto items-center justify-center p-4 rounded-2xl bg-success bg-opacity-40">
           <p className="text-white font-fredoka text-l font-light text-center">
             Registro Exitoso
           </p>
         </div>
       )}
-      
+
       {/* INFO Y T&C */}
       <h1 className="md:text-xl text-center font-fredoka text-white md:mt-24 mt-24 md:mb-24 mb-24 px-8">
         <span className="flex flex-col md:flex-row items-center justify-center">

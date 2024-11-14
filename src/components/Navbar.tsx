@@ -20,20 +20,26 @@ const Navbar = () => {
       maxWidth="full"
     >
       <NavbarBrand>
-        <div className="flex items-center md:ml-10  cursor-pointer"
-        onClick={() => navigate("/")}>
-          <Avatar
-            src="/adopt1.png"
-            size="lg"
-            className="shadow-[0_0_10px_rgba(255,255,255,0.7)] w-12 h-auto p-1 md:h-14 md:w-auto md:p-2 object-cover "
-            
-          />
+        <div
+          className="flex items-center md:ml-10  cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, staggerChildren: 0.1 }}
+          >
+            <Avatar
+              src="/adopt1.png"
+              size="lg"
+              className="shadow-[0_0_10px_rgba(255,255,255,0.7)] w-12 h-auto p-1 md:h-14 md:w-auto md:p-2 object-cover "
+            />
+          </motion.div>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, staggerChildren: 0.1 }}
             className="md:ml-4 ml-2 text-inherit text-white md:text-4xl text-xl font-semi-bold font-fredoka"
-            
           >
             AdoptMeow
           </motion.p>
