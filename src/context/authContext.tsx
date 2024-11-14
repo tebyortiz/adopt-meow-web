@@ -7,7 +7,11 @@ import {
   useCallback,
 } from "react";
 import PropTypes from "prop-types";
-import { registerRequest, verifyTokenRequest } from "../services/auth";
+import {
+  registerRequest,
+  verifyTokenRequest,
+  loginRequest,
+} from "../services/auth";
 import { UserRegistrationData } from "../models/UserRegistrationData";
 
 interface AuthContextProps {
@@ -17,6 +21,8 @@ interface AuthContextProps {
   isAuthenticated: boolean;
   authErrors: { field: string; message: string }[];
   clearErrors: () => void;
+  signIn: (credentials: UserRegistrationData) => Promise<void>;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -59,12 +65,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const handleAuthError = (error: any): void => {
-    //console.error("Error capturado en handleAuthError:", error);
-
     if (error.response && error.response.data) {
       const responseData = error.response.data;
-      //console.log("Datos de la respuesta de error:", responseData);
-
       if (responseData.errors) {
         const yupErrors = responseData.errors.map((err: any) => ({
           field: err.field,
@@ -91,19 +93,52 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthErrors([]);
   }, []);
 
-  useEffect(() => {
-    async function checkLogin() {
-      const token = await localStorage.getItem("token");
+  const signIn = async (credentials: UserRegistrationData): Promise<void> => {
+    clearErrors();
+    try {
+      const response = await loginRequest(credentials);
+      if (response && response.data && response.headers) {
+        const { data, headers } = response;
+        if (headers.authorization) {
+          const token = headers.authorization.split(" ")[1];
+          localStorage.setItem("token", token);
+          localStorage.setItem("userId", data.id);
+          localStorage.setItem("userType", data.userType);
+          setUser(data);
+          setIsAuthenticated(true);
+          return Promise.resolve();
+        } else {
+          setAuthErrors([{ field: "network", message: "Error de red" }]);
+          return Promise.reject();
+        }
+      }
+    } catch (error) {
+      handleAuthError(error);
+      return Promise.reject(error);
+    }
+  };
 
+  const logout = async (): Promise<void> => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userType");
+    setUser(null);
+    setIsAuthenticated(false);
+    setAuthErrors([]);
+  };
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = localStorage.getItem("token");
       if (!token) {
         setIsAuthenticated(false);
         setLoading(false);
-        return setUser(null);
+        setUser(null);
+        return;
       }
 
       try {
         const res = await verifyTokenRequest(token);
-
         if (!res.data) {
           setIsAuthenticated(false);
           setLoading(false);
@@ -112,14 +147,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         setIsAuthenticated(true);
         setUser(res.data);
-        setLoading(false);
       } catch (error) {
-        //console.error("Error al verificar el token:", error);
         setIsAuthenticated(false);
         setUser(null);
+      } finally {
         setLoading(false);
       }
-    }
+    };
 
     checkLogin();
   }, []);
@@ -133,6 +167,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated,
         authErrors,
         clearErrors,
+        signIn,
+        logout,
       }}
     >
       {children}

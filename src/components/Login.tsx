@@ -8,8 +8,10 @@ import {
 } from "@mdi/js";
 import { motion } from "framer-motion";
 import { Card, Input, Button as NextUIButton } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+import { UserRegistrationData } from "../models/UserRegistrationData";
 
 const cardVariant = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -24,13 +26,73 @@ const cardVariant = {
   }),
 };
 
-const Register = () => {
+const Login = () => {
   const navigate = useNavigate();
+  const { signIn, authErrors, clearErrors } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginSuccessful, setLoginSuccessful] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFormComplete, setIsFormComplete] = useState(false);
+  const [showAuthErrors, setShowAuthErrors] = useState(false);
+
+  const resetStates = useCallback(() => {
+    clearErrors();
+    setEmail("");
+    setPassword("");
+    setShowAuthErrors(false);
+  }, [clearErrors]);
+
+  useEffect(() => {
+    resetStates();
+  }, [resetStates]);
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
+  const handleLogin = async () => {
+    const credentials: UserRegistrationData = { email, password };
+
+    try {
+      await signIn(credentials);
+      setIsLoading(true);
+      setLoginSuccessful(true);
+
+      const userType = await localStorage.getItem("userType");
+      setTimeout(() => {
+        if (userType === "owner") {
+          navigate("/owner-main");
+        } else if (userType === "adopter") {
+          navigate("/adopter-main");
+        } else {
+          console.error("Tipo de usuario desconocido");
+        }
+      }, 2000);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    setIsFormComplete(email !== "" && password !== "");
+  }, [email, password]);
+
+  useEffect(() => {
+    if (authErrors.length > 0) {
+      setShowAuthErrors(true);
+      setTimeout(() => {
+        setShowAuthErrors(false);
+      }, 3000);
+    }
+  }, [authErrors]);
 
   return (
     <div>
@@ -148,6 +210,8 @@ const Register = () => {
                       }
                       variant="bordered"
                       className="mb-0 text-white font-fredoka font-semibold"
+                      value={email}
+                      onChange={handleEmailChange}
                     />
                   </div>
 
@@ -186,6 +250,8 @@ const Register = () => {
                       }
                       variant="bordered"
                       className="mb-0 text-white font-fredoka font-semibold"
+                      value={password}
+                      onChange={handlePasswordChange}
                     />
                   </div>
                 </motion.div>
@@ -200,10 +266,12 @@ const Register = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.5 }}
           variants={cardVariant}
-          className="flex justify-center md:w-3/6 w-full md:mb-2 mb-24 m-auto"
+          className="flex justify-center md:w-3/6 w-full md:mb-2 mb-6 m-auto"
         >
           <NextUIButton
             as={motion.button}
+            isDisabled={!isFormComplete || isLoading}
+            onPress={handleLogin}
             whileHover={{
               scale: 1,
               background:
@@ -240,7 +308,28 @@ const Register = () => {
         </motion.div>
       </div>
 
-      <h1 className="md:text-xl text-center font-fredoka text-white md:mt-20 md:mb-24 mb-24 px-8">
+      {showAuthErrors && authErrors.length > 0 && (
+        <div className="md:w-2/6 w-5/6 md:mt-4 m-auto items-center justify-center p-4 rounded-2xl bg-danger bg-opacity-40">
+          {authErrors.map((error, index) => (
+            <p
+              key={index}
+              className="text-white font-fredoka text-l font-light text-center"
+            >
+              {error.message}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {loginSuccessful && (
+        <div className="md:w-2/6 w-5/6 md:mt-4 m-auto items-center justify-center p-4 rounded-2xl bg-success bg-opacity-40">
+          <p className="text-white font-fredoka text-l font-light text-center">
+            Ingreso Exitoso
+          </p>
+        </div>
+      )}
+
+      <h1 className="md:text-xl text-center font-fredoka text-white md:mt-20 mt-20 md:mb-24 mb-24 px-8">
         <span className="flex flex-col md:flex-row items-center justify-center">
           ¿No tienes una cuenta?{" "}
           <a
@@ -288,4 +377,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
