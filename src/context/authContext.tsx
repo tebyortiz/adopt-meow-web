@@ -6,11 +6,11 @@ import {
   ReactNode,
   useCallback,
 } from "react";
-import PropTypes from "prop-types";
 import {
   registerRequest,
   verifyTokenRequest,
   loginRequest,
+  getUserByIdRequest,
 } from "../services/auth";
 import { UserRegistrationData } from "../models/UserRegistrationData";
 
@@ -23,6 +23,7 @@ interface AuthContextProps {
   clearErrors: () => void;
   signIn: (credentials: UserRegistrationData) => Promise<void>;
   logout: () => void;
+  getUserById: (id: string) => Promise<UserRegistrationData | undefined>;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -50,13 +51,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const signup = async (userData: UserRegistrationData): Promise<void> => {
+    clearErrors();
     try {
       const response = await registerRequest(userData);
-      if (response && response.data) {
-        const { data } = response;
-        setUser(data);
-        setIsAuthenticated(false);
-        return Promise.resolve();
+      if (response && response.data && response.headers) {
+        const { data, headers } = response;
+
+        if (headers.authorization) {
+          const token = headers.authorization.split(" ")[1];
+          localStorage.setItem("token", token);
+          localStorage.setItem("userId", data.id);
+          localStorage.setItem("userType", data.userType);
+          setUser(data);
+          setIsAuthenticated(true);
+          return Promise.resolve();
+        } else {
+          setAuthErrors([
+            { field: "network", message: "Error de autenticación" },
+          ]);
+          return Promise.reject();
+        }
       }
     } catch (error) {
       handleAuthError(error);
@@ -127,6 +141,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthErrors([]);
   };
 
+  const getUserById = async (
+    id: string
+  ): Promise<UserRegistrationData | undefined> => {
+    try {
+      const user = await getUserByIdRequest(id);
+      return user;
+    } catch (error) {
+      //console.error("Error fetching user by ID:", error);
+      return undefined;
+    }
+  };
+
   useEffect(() => {
     const checkLogin = async () => {
       const token = localStorage.getItem("token");
@@ -169,13 +195,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         clearErrors,
         signIn,
         logout,
+        getUserById,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

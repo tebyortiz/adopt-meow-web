@@ -1,5 +1,6 @@
 import axios from "./axios";
 import { UserRegistrationData } from "../models/UserRegistrationData";
+import { CatData } from "../models/CatData";
 
 axios.interceptors.request.use(
   async (config) => {
@@ -59,3 +60,15 @@ export const loginRequest = async (user: UserRegistrationData) => {
     throw error;
   }
 };
+
+export const getUserByIdRequest = async (id: string) => {
+  try {
+    const response = await axios.get(`/users/${id}`);
+    return response.data;
+  } catch (error) {
+    //console.error("Error fetching user by ID:", error);
+    throw error;
+  }
+};
+
+export const createCatRequest = (cat: CatData) => axios.post(`/cats`, cat);
