@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import { AuthProvider, useAuth } from "./context/authContext";
 import OwnerMain from "./components/OwnerMain";
 import AdopterMain from "./components/AdopterMain";
+import Sidebar from "./components/Sidebar";
+import { CatProvider } from "./context/CatContext";
 
 function AppRoutes() {
   const { user } = useAuth();
@@ -28,11 +30,18 @@ function AppRoutes() {
 
   return (
     <Layout2>
-      <Routes>
-        <Route path="/owner-main" element={<OwnerMain />} />
-        <Route path="/adopter-main" element={<AdopterMain />} />
-        <Route path="*" element={<Navigate to="/owner-main" replace />} />
-      </Routes>
+      <div className="flex flex-grow">
+        <div className="flex-none w-1/5">
+          <Sidebar />
+        </div>
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/owner-main" element={<OwnerMain />} />
+            <Route path="/adopter-main" element={<AdopterMain />} />
+            <Route path="*" element={<Navigate to="/owner-main" replace />} />
+          </Routes>
+        </div>
+      </div>
     </Layout2>
   );
 }
@@ -40,7 +49,9 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <AppRoutes />
+      <CatProvider>
+        <AppRoutes />
+      </CatProvider>
     </AuthProvider>
   );
 }
