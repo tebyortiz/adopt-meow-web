@@ -42,7 +42,7 @@ const Sidebar = () => {
     userType === "owner"
       ? [
           { name: "Postular", path: "/owner-main", icon: "/orange-cat.png" },
-          { name: "Reportes", path: "/OwnerReports", icon: "/clipboard.png" },
+          { name: "Reportes", path: "/owner-reports", icon: "/clipboard.png" },
         ]
       : userType === "adopter"
       ? [

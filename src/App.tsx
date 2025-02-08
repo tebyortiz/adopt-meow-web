@@ -10,6 +10,7 @@ import OwnerMain from "./components/OwnerMain";
 import AdopterMain from "./components/AdopterMain";
 import Sidebar from "./components/Sidebar";
 import { CatProvider } from "./context/CatContext";
+import OwnerReports from "./components/OwnerReports";
 
 
 function AppRoutes() {
@@ -39,6 +40,7 @@ function AppRoutes() {
           <Routes>
             <Route path="/owner-main" element={<OwnerMain />} />
             <Route path="/adopter-main" element={<AdopterMain />} />
+            <Route path="/owner-reports" element={<OwnerReports />} />
           </Routes>
         </div>
       </div>
