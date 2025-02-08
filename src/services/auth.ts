@@ -72,3 +72,19 @@ export const getUserByIdRequest = async (id: string) => {
 };
 
 export const createCatRequest = (cat: CatData) => axios.post(`/cats`, cat);
+
+export const getCatsRequest = () => axios.get(`/cats`);
+
+export const applyAdoptionRequest = async (
+  catId: string,
+  adopterId: string
+) => {
+  try {
+    const response = await axios.put(`/cats/${catId}/adopted`, { adopterId });
+    //console.log("Adoption request sent:", response);
+    return response;
+  } catch (error) {
+    //console.error("Error sending adoption request:", error);
+    throw error;
+  }
+};

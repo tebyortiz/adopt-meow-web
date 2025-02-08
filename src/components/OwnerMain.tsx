@@ -155,6 +155,7 @@ const OwnerMain = () => {
       await createCat(newCat);
       alert("¡Éxito! El nuevo reporte se ha creado correctamente.");
       resetForm();
+      setIsPreviewVisible(false);
     } catch (error) {
       console.error("Error al crear el reporte:", error);
       alert(
@@ -190,6 +191,7 @@ const OwnerMain = () => {
             </p>
           </div>
 
+          {/* MichiPerfil */}
           <div className="bg-white bg-opacity-5 w-full rounded-3xl flex-1 flex flex-col p-8">
             <p
               className="text-center mb-4 font-fredoka font-semibold text-2xl text-transparent bg-clip-text"
@@ -391,6 +393,8 @@ const OwnerMain = () => {
             </div>
           </div>
         </div>
+
+        {/* Botón Vista Lateral */}
         <NextUIButton
           onPress={handlePreviewClick}
           color="secondary"
@@ -408,6 +412,7 @@ const OwnerMain = () => {
         </NextUIButton>
       </div>
 
+      {/* Previsualización del MichiPerfil */}
       {isPreviewVisible && (
         <div className="flex flex-col w-1/2 space-y-4">
           <div
@@ -421,7 +426,7 @@ const OwnerMain = () => {
               <img
                 src={image}
                 alt="Foto"
-                className="rounded-full h-48 w-48 object-cover m-auto"
+                className="rounded-full h-48 w-48 border-2 border-white shadow-lg object-cover m-auto"
               />
               <div className="p-4 bg-white bg-opacity-5 rounded-3xl mx-16 space-y-2 ">
                 <p className="text-white font-fredoka text-md">
@@ -450,6 +455,8 @@ const OwnerMain = () => {
               </div>
             </div>
           </div>
+
+          {/* Botón para Publicar gatito */}
           <NextUIButton
             onPress={handleSubmit}
             color="secondary"

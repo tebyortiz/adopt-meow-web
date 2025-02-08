@@ -11,6 +11,7 @@ import AdopterMain from "./components/AdopterMain";
 import Sidebar from "./components/Sidebar";
 import { CatProvider } from "./context/CatContext";
 
+
 function AppRoutes() {
   const { user } = useAuth();
 
@@ -38,7 +39,6 @@ function AppRoutes() {
           <Routes>
             <Route path="/owner-main" element={<OwnerMain />} />
             <Route path="/adopter-main" element={<AdopterMain />} />
-            <Route path="*" element={<Navigate to="/owner-main" replace />} />
           </Routes>
         </div>
       </div>
