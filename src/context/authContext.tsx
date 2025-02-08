@@ -51,26 +51,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const signup = async (userData: UserRegistrationData): Promise<void> => {
-    clearErrors();
     try {
       const response = await registerRequest(userData);
-      if (response && response.data && response.headers) {
-        const { data, headers } = response;
-
-        if (headers.authorization) {
-          const token = headers.authorization.split(" ")[1];
-          localStorage.setItem("token", token);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userType", data.userType);
-          setUser(data);
-          setIsAuthenticated(true);
-          return Promise.resolve();
-        } else {
-          setAuthErrors([
-            { field: "network", message: "Error de autenticación" },
-          ]);
-          return Promise.reject();
-        }
+      if (response && response.data) {
+        return Promise.resolve();
       }
     } catch (error) {
       handleAuthError(error);

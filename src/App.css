@@ -1,8 +1,2 @@
-.shadow-icon {
-  box-shadow: 0 0 10px rgba(232, 20, 184, 0.5);
-}
-
-.shadow-text {
-  text-shadow: 0 0 10px rgba(232, 20, 184, 0.5);
-}
+@import "https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css";
 

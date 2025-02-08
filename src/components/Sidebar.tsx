@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Avatar, Divider, Button as NextUIButton } from "@nextui-org/react";
 import { useAuth } from "../context/authContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const menuVariants = {
   hidden: { x: "-100%", opacity: 0 },
@@ -19,12 +19,41 @@ const menuVariants = {
 const Sidebar = () => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
-  const [selectedSection, setSelectedSection] = useState("postular"); // Estado inicial
+  const [selectedSection, setSelectedSection] = useState("postular");
+  const [userType, setUserType] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUserType = localStorage.getItem("userType");
+    setUserType(storedUserType);
+
+    if (storedUserType === "owner") {
+      setSelectedSection("Postular");
+    } else if (storedUserType === "adopter") {
+      setSelectedSection("Búsqueda");
+    }
+  }, []);
 
   const handleLogout = async () => {
     await logout();
     navigate("/Login");
   };
+
+  const menuItems =
+    userType === "owner"
+      ? [
+          { name: "Postular", path: "/owner-main", icon: "/orange-cat.png" },
+          { name: "Reportes", path: "/OwnerReports", icon: "/clipboard.png" },
+        ]
+      : userType === "adopter"
+      ? [
+          { name: "Búsqueda", path: "/adopter-main", icon: "/search-icon.png" },
+          {
+            name: "Mis Postulaciones",
+            path: "/AdopterApplications",
+            icon: "/heart.png",
+          },
+        ]
+      : [];
 
   return (
     <div className="h-screen flex justify-center items-center px-4">
@@ -65,57 +94,33 @@ const Sidebar = () => {
 
         {/* Secciones del Sidebar */}
         <div className="h-auto space-y-4">
-          {/* Sección "Postular" */}
-          <motion.div
-            whileTap={{ scale: 0.95 }}
-            animate={
-              selectedSection === "postular"
-                ? { opacity: 1, scale: 1 }
-                : { opacity: 0.5, scale: 1 }
-            }
-            className={`flex flex-row items-center p-2 rounded-2xl px-2 mx-4 cursor-pointer transition-all duration-300 ${
-              selectedSection === "postular"
-                ? "bg-white bg-opacity-10"
-                : "hover:bg-white hover:bg-opacity-5"
-            }`}
-            onClick={() => {
-              setSelectedSection("postular");
-              navigate("/OwnerMain");
-            }}
-          >
-            <img
-              src="/orange-cat.png"
-              alt="Postular"
-              className="h-12 w-auto mr-2"
-            />
-            <p className="text-white font-fredoka text-xl">Postular</p>
-          </motion.div>
-
-          {/* Sección "Reportes" */}
-          <motion.div
-            whileTap={{ scale: 0.95 }}
-            animate={
-              selectedSection === "reportes"
-                ? { opacity: 1, scale: 1 }
-                : { opacity: 0.5, scale: 1 }
-            }
-            className={`flex flex-row items-center p-2 rounded-2xl px-2 mx-4 cursor-pointer transition-all duration-300 ${
-              selectedSection === "reportes"
-                ? "bg-white bg-opacity-10"
-                : "hover:bg-white hover:bg-opacity-5"
-            }`}
-            onClick={() => {
-              setSelectedSection("reportes");
-              navigate("/OwnerMain");
-            }}
-          >
-            <img
-              src="/clipboard.png"
-              alt="Reportes"
-              className="h-12 w-auto mr-2"
-            />
-            <p className="text-white font-fredoka text-xl">Reportes</p>
-          </motion.div>
+          {menuItems.map((item) => (
+            <motion.div
+              key={item.path}
+              whileTap={{ scale: 0.95 }}
+              animate={
+                selectedSection === item.name
+                  ? { opacity: 1, scale: 1 }
+                  : { opacity: 0.5, scale: 1 }
+              }
+              className={`flex flex-row items-center p-2 rounded-2xl px-2 mx-4 cursor-pointer transition-all duration-300 ${
+                selectedSection === item.name
+                  ? "bg-white bg-opacity-10"
+                  : "hover:bg-white hover:bg-opacity-5"
+              }`}
+              onClick={() => {
+                setSelectedSection(item.name);
+                navigate(item.path);
+              }}
+            >
+              <img
+                src={item.icon}
+                alt={item.name}
+                className="h-12 w-auto mr-2"
+              />
+              <p className="text-white font-fredoka text-xl">{item.name}</p>
+            </motion.div>
+          ))}
         </div>
 
         {/* Sección del usuario en la parte inferior */}
