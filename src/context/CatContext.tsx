@@ -10,6 +10,8 @@ import {
   createCatRequest,
   getCatsRequest,
   applyAdoptionRequest,
+  updateCatOwnerRequest,
+  confirmAdoptionRequest,
 } from "../services/auth";
 
 interface CatContextProps {
@@ -17,6 +19,8 @@ interface CatContextProps {
   createCat: (cat: CatData) => Promise<void>;
   getCats: () => void;
   applyAdoption: (catId: string, adopterId: string) => Promise<void>;
+  updateCatOwner: (catId: string, newOwnerId: string) => Promise<void>;
+  confirmAdoption: (catId: string, adopterId: string) => Promise<void>;
 }
 
 const CatContext = createContext<CatContextProps | undefined>(undefined);
@@ -52,6 +56,26 @@ export const CatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateCatOwner = async (catId: string, newOwnerId: string) => {
+    try {
+      await updateCatOwnerRequest(catId, newOwnerId);
+      getCats();
+    } catch (error) {
+      //console.error("Failed to update cat owner", error);
+      throw error;
+    }
+  };
+
+  const confirmAdoption = async (catId: string, adopterId: string) => {
+    try {
+      await confirmAdoptionRequest(catId, adopterId);
+      getCats();
+    } catch (error) {
+      //console.error("Failed to confirm adoption", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     getCats();
   }, []);
@@ -63,6 +87,8 @@ export const CatProvider = ({ children }: { children: ReactNode }) => {
         createCat,
         getCats,
         applyAdoption,
+        updateCatOwner,
+        confirmAdoption,
       }}
     >
       {children}
