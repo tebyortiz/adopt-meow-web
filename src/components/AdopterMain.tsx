@@ -3,13 +3,17 @@ import GoogleMapComponent from "./GoogleMapComponent";
 import { useCats } from "../context/CatContext";
 import { CatData } from "../models/CatData";
 import { Button as NextUIButton } from "@nextui-org/react";
+import { useAuth } from "../context/authContext";
+import { UserRegistrationData } from "../models/UserRegistrationData";
 
 const AdopterMain = () => {
   const { getCats, applyAdoption, cats } = useCats();
+  const { getUserById } = useAuth();
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [filteredCats, setFilteredCats] = useState<CatData[]>([]);
   const [selectedCat, setSelectedCat] = useState<CatData | null>(null);
+  const [ownerData, setOwnerData] = useState<UserRegistrationData | null>(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
 
   const translateValue = (key: string, value: string) => {
@@ -22,8 +26,19 @@ const AdopterMain = () => {
   };
 
   const handlePreviewClick = (cat: CatData) => {
+    console.log("Gatito seleccionado:", cat);
     setSelectedCat(cat);
     setIsPreviewVisible(true);
+  
+    // Ejecutar fetchOwnerData inmediatamente después de actualizar el estado
+    setTimeout(() => {
+      if (cat.ownerId) {
+        getUserById(cat.ownerId).then((owner) => {
+          console.log("Dueño cargado en handlePreviewClick:", owner);
+          setOwnerData(owner || null);
+        });
+      }
+    }, 0);
   };
 
   useEffect(() => {
@@ -62,6 +77,26 @@ const AdopterMain = () => {
 
     fetchCats();
   }, [cats]);
+
+  useEffect(() => {
+    const fetchOwnerData = async () => {
+      if (selectedCat?.ownerId) {
+        console.log("Obteniendo datos del dueño con ID:", selectedCat.ownerId);
+        try {
+          const owner = await getUserById(selectedCat.ownerId);
+          console.log("Datos del dueño recibidos:", owner);
+          setOwnerData(owner || null);
+        } catch (error) {
+          console.error("Error fetching owner data:", error);
+        }
+      } else {
+        console.log("No hay ownerId en selectedCat");
+        setOwnerData(null);
+      }
+    };
+  
+    fetchOwnerData();
+  }, [selectedCat]);  
 
   const handleAdopt = async () => {
     const adopterId = await localStorage.getItem("userId");
@@ -135,7 +170,7 @@ const AdopterMain = () => {
               <img
                 src={selectedCat.image}
                 alt="Foto"
-                className="rounded-full h-48 w-48 border-2 border-white shadow-lg object-cover m-auto"
+                className="rounded-full h-36 w-36 border-2 border-white shadow-lg object-cover m-auto"
               />
               <div className="p-4 bg-white bg-opacity-5 rounded-3xl mx-16 space-y-2 ">
                 <p className="text-white font-fredoka text-md">
@@ -164,6 +199,25 @@ const AdopterMain = () => {
                   Descripción: {selectedCat.description}
                 </p>
               </div>
+
+              {/* DATOS DE getUserById */}
+              {ownerData && (
+                <div className="flex flex-col bg-white bg-opacity-5 rounded-3xl p-4 mx-16 space-y-2">
+                  <p className="text-white font-fredoka text-md">
+                    Postulado por:
+                  </p>
+                  <div className="flex items-center space-x-4">
+                    <img
+                      src={ownerData.image}
+                      alt="Dueño"
+                      className="rounded-full h-16 w-16 border-2 border-white shadow-lg object-cover"
+                    />
+                    <p className="text-white font-fredoka text-md">
+                      {ownerData.username}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Texto alineado en la parte inferior */}
