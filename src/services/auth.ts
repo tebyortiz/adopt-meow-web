@@ -117,3 +117,16 @@ export const confirmAdoptionRequest = async (
     throw error;
   }
 };
+
+export const deleteCatRequest = (id: string) => axios.delete(`/cats/${id}`);
+
+export const removeAdopterRequest = async (catId: string) => {
+  try {
+    const response = await axios.delete(`/cats/${catId}/remove-adopter`);
+    //console.log("Remove adopter request sent:", response);
+    return response;
+  } catch (error) {
+    //console.error("Error removing adopter:", error);
+    throw error;
+  }
+};

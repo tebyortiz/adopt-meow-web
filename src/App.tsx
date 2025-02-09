@@ -11,6 +11,7 @@ import AdopterMain from "./components/AdopterMain";
 import Sidebar from "./components/Sidebar";
 import { CatProvider } from "./context/CatContext";
 import OwnerReports from "./components/OwnerReports";
+import AdopterApplications from "./components/AdopterApplications";
 
 
 function AppRoutes() {
@@ -41,6 +42,7 @@ function AppRoutes() {
             <Route path="/owner-main" element={<OwnerMain />} />
             <Route path="/adopter-main" element={<AdopterMain />} />
             <Route path="/owner-reports" element={<OwnerReports />} />
+            <Route path="/adopter-applications" element={<AdopterApplications />} />
           </Routes>
         </div>
       </div>
