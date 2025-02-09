@@ -49,7 +49,7 @@ const Sidebar = () => {
           { name: "Búsqueda", path: "/adopter-main", icon: "/search-icon.png" },
           {
             name: "Mis Postulaciones",
-            path: "/AdopterApplications",
+            path: "/adopter-applications",
             icon: "/heart.png",
           },
         ]

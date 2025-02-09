@@ -12,6 +12,8 @@ import {
   applyAdoptionRequest,
   updateCatOwnerRequest,
   confirmAdoptionRequest,
+  deleteCatRequest,
+  removeAdopterRequest,
 } from "../services/auth";
 
 interface CatContextProps {
@@ -21,6 +23,8 @@ interface CatContextProps {
   applyAdoption: (catId: string, adopterId: string) => Promise<void>;
   updateCatOwner: (catId: string, newOwnerId: string) => Promise<void>;
   confirmAdoption: (catId: string, adopterId: string) => Promise<void>;
+  deleteCat: (id: string) => Promise<void>;
+  removeAdopter: (catId: string) => Promise<void>;
 }
 
 const CatContext = createContext<CatContextProps | undefined>(undefined);
@@ -76,6 +80,25 @@ export const CatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const deleteCat = async (id: string) => {
+    try {
+      await deleteCatRequest(id);
+      getCats();
+    } catch (error) {
+      //console.error("Failed to delete cat", error);
+    }
+  };
+
+  const removeAdopter = async (catId: string) => {
+    try {
+      await removeAdopterRequest(catId);
+      getCats();
+    } catch (error) {
+      //console.error("Failed to remove adopter:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     getCats();
   }, []);
@@ -89,6 +112,8 @@ export const CatProvider = ({ children }: { children: ReactNode }) => {
         applyAdoption,
         updateCatOwner,
         confirmAdoption,
+        deleteCat,
+        removeAdopter,
       }}
     >
       {children}
