@@ -65,7 +65,6 @@ const AdopterApplications = () => {
         prevTypes.filter((_, idx) => adoptedCats[idx]._id !== catId)
       );
 
-      // Ocultar los detalles al eliminar la notificación
       setSelectedCat(null);
       setSelectedStatus("");
     } catch (error) {
@@ -101,11 +100,18 @@ const AdopterApplications = () => {
             </p>
           </div>
 
-          <div className="flex flex-col bg-white bg-opacity-5 w-full rounded-3xl flex-1 p-8 space-y-4">
+          <div className="flex flex-col bg-white bg-opacity-5 w-full rounded-3xl flex-1 p-4 space-y-4 px-10">
+          <p className="text-white font-fredoka text-xl text-center mt-4 mb-4">
+              Selecciona un gatito para ver el estado de la postulación.
+            </p>
             {adoptedCats.map((cat, index) => (
               <div
                 key={cat._id}
-                className="flex flex-row bg-white bg-opacity-5 rounded-3xl p-4 items-center cursor-pointer hover:bg-opacity-10 transition"
+                className="flex flex-row rounded-3xl p-2 items-center cursor-pointer hover:bg-opacity-90 transition px-4"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
+                }}
                 onClick={() => {
                   setSelectedCat(cat);
                   setSelectedStatus(novedadTypes[index]);
@@ -114,14 +120,14 @@ const AdopterApplications = () => {
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="rounded-full w-12 h-12 object-cover"
+                  className="flex rounded-full w-16 h-16 border-2 border-white object-cover"
                 />
-                <p className="text-white font-fredoka text-2xl ml-4 flex-1">
+                <p className="text-white font-fredoka text-2xl ml-4">
                   {cat.name}
                 </p>
 
                 {/* Estado de la postulación con icono */}
-                <div className="flex items-center">
+                <div className="flex ml-auto mr-1">
                   {novedadTypes[index] === "En Revisión" && (
                     <img
                       src="/clock.png"
@@ -171,20 +177,30 @@ const AdopterApplications = () => {
               Información de la Postulación
             </p>
             {selectedCat && (
-              <div className="bg-white bg-opacity-5 p-8 rounded-3xl flex flex-col items-center">
-                <div className="flex flex-col bg-white bg-opacity-5 rounded-3xl p-8 w-2/3 items-center">
+              <div className="bg-white bg-opacity-5 p-8 rounded-3xl mx-16 flex flex-col items-center">
+               <div
+                className="flex flex-row items-center justify-center rounded-2xl p-4 gap-4 w-5/6 mb-8 items-center border-2 border-white border-opacity-40"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.4))",
+                }}
+              >
                   <img
                     src={selectedCat.image}
                     alt={selectedCat.name}
-                    className="rounded-full w-36 h-36 border-2 border-white object-cover"
+                    className="rounded-full w-20 h-20 border-2 border-white object-cover"
                   />
-                  <p className="text-white font-fredoka text-2xl mt-4">
-                    {selectedCat.name}
+                  <p className="text-white font-fredoka text-xl">
+                    Postulación a la adopción de {selectedCat.name}
                   </p>
                 </div>
 
                 {/* Estado con imagen correspondiente */}
-                <div className="flex items-center justify-center mt-8 bg-white bg-opacity-5 rounded-3xl p-8 w-2/3 gap-2">
+                <div className="flex items-center justify-center rounded-3xl p-8 w-5/6 gap-2 mb-12"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
+                }}>
                   <p className="text-white font-fredoka text-2xl mr-2">
                     Estado:
                   </p>
@@ -230,11 +246,11 @@ const AdopterApplications = () => {
                 </div>
 
                 {/* Mensaje según estado */}
-                <p className="text-white font-fredoka text-md text-center mt-8 w-2/3">
+                <p className="text-white font-fredoka text-lg text-center w-2/3 mb-12">
                   {selectedStatus === "En Revisión" &&
                     `Por favor, aguarda hasta que el propietario de ${selectedCat.name} decida a quién hará entrega del mismo.`}
                   {selectedStatus === "Aprobado" &&
-                    `Felicidades, has sido seleccionado para la adopción de ${selectedCat.name}, el propietario se pondrá en contacto contigo.`}
+                    `Felicidades! has sido seleccionado para la adopción de ${selectedCat.name}, el propietario se pondrá en contacto contigo.`}
                   {selectedStatus === "No Aprobado" &&
                     `Lo sentimos, el propietario de ${selectedCat.name} ha seleccionado otro postulante para la entrega del mismo.`}
                 </p>
@@ -243,7 +259,7 @@ const AdopterApplications = () => {
                 {selectedCat && selectedStatus && (
                   <NextUIButton
                     color="danger"
-                    className="mt-8"
+                    className="mt-8 font-fredoka text-md bg-opacity-40 p-8"
                     onClick={() =>
                       handleDeleteNotification(
                         selectedCat._id!,
