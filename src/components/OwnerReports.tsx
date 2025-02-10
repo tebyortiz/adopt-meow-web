@@ -20,18 +20,20 @@ const OwnerReports = () => {
         const userId = localStorage.getItem("userId");
         if (userId) {
           await getCats();
-          const notAdoptedCats = cats.filter(
-            (cat: CatData) =>
-              !cat.adopted && !(cat.adopterId && cat.adopterId.includes(userId))
+
+          const userCats = cats.filter(
+            (cat: CatData) => cat.ownerId === userId
           );
-          setFilteredCats(notAdoptedCats);
+
+          setFilteredCats(userCats);
         }
       } catch (error) {
         console.error("Error fetching cats:", error);
       }
     };
+
     fetchCats();
-  }, [cats]);
+  }, [getCats]);
 
   useEffect(() => {
     if (!selectedCat) {
@@ -75,11 +77,10 @@ const OwnerReports = () => {
         await confirmAdoption(selectedCat._id, adopter.id);
         setSelectedAdopter(adopter);
 
-        // Oculta la sección de adoptantes después de confirmar
         setTimeout(() => {
           setSelectedCat(null);
           setSelectedAdopter(null);
-        }, 500); // Agrega un pequeño delay para que se note la interacción
+        }, 500);
       } catch (error) {
         console.error(
           "Error updating cat owner or confirming adoption:",
@@ -116,11 +117,18 @@ const OwnerReports = () => {
             </p>
           </div>
 
-          <div className="flex flex-col bg-white bg-opacity-5 w-full rounded-3xl flex-1 p-8 space-y-4">
+          <div className="flex flex-col bg-white bg-opacity-5 rounded-3xl flex-1 p-4 space-y-4 px-10">
+            <p className="text-white font-fredoka text-xl text-center mt-4 mb-4">
+              Selecciona un gatito para elegir su adoptante.
+            </p>
             {filteredCats.map((cat) => (
               <div
                 key={cat._id}
-                className="flex flex-row bg-white bg-opacity-5 rounded-3xl p-4 items-center cursor-pointer hover:bg-opacity-10 transition"
+                className="flex flex-row rounded-3xl p-2 items-center cursor-pointer hover:bg-opacity-90 transition px-4"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
+                }}
                 onClick={() => {
                   setSelectedCat(cat);
                   setSelectedAdopter(null);
@@ -129,14 +137,14 @@ const OwnerReports = () => {
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="flex rounded-full w-12 h-12 object-cover"
+                  className="flex rounded-full w-16 h-16 border-2 border-white object-cover"
                 />
 
                 <p className="text-white font-fredoka text-2xl ml-4">
                   {cat.name}
                 </p>
 
-                <p className="text-white font-fredoka text-2xl ml-auto">
+                <p className="text-white font-fredoka text-lg ml-auto mr-2">
                   Postulantes {cat.adopterId ? cat.adopterId.length : 0}
                 </p>
               </div>
@@ -158,41 +166,50 @@ const OwnerReports = () => {
               }}
             >
               {/* Datos Gatito a Adoptar */}
-              <div className="p-4 bg-white bg-opacity-5 rounded-3xl h-auto space-y-4 mt-6 mb-8 mx-16">
+              <div
+                className="flex flex-row items-center rounded-2xl p-4 gap-4 items-center justify-center mx-16 mt-4 mb-8 border-2 border-white border-opacity-40"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.4))",
+                }}
+              >
                 <img
                   src={selectedCat.image}
                   alt={selectedCat.name}
-                  className="rounded-full h-48 w-48 border-2 border-white shadow-lg object-cover m-auto"
+                  className="rounded-full h-20 w-20 border-2 border-white shadow-lg object-cover"
                 />
-                <p className="text-white text-center font-fredoka text-md">
+                <p className="text-white text-center font-fredoka text-xl">
                   Adopción de {selectedCat.name}
                 </p>
               </div>
 
-              <p className="text-white text-center font-fredoka text-md mb-8">
-                Por favor, selecciona el adoptante:
+              <p className="text-white text-center font-fredoka text-xl mb-8">
+                Por favor, selecciona el adoptante para su entrega:
               </p>
 
               {/* Adoptantes que aplicaron para la adopción del gatito */}
-              <div className="flex flex-col space-y-4 mx-16">
+              <div className="flex flex-col space-y-4 mx-16 bg-white bg-opacity-5 rounded-3xl p-8">
                 {adopters.map((adopter) => (
                   <div
                     key={adopter.id}
-                    className="flex flex-row bg-white bg-opacity-5 rounded-3xl p-4 items-center"
+                    className="flex flex-row rounded-3xl p-4 items-center cursor-pointer"
+                    style={{
+                      background:
+                        "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
+                    }}
+                    onClick={() => setSelectedAdopter(adopter)}
                   >
                     <img
                       src={adopter.image}
                       alt={adopter.username}
-                      className="flex rounded-full w-12 h-12 object-cover"
+                      className="flex rounded-full w-16 h-16 border-2 border-white object-cover"
                     />
                     <p className="text-white font-fredoka text-2xl ml-4">
                       {adopter.username}
                     </p>
-                    {/* Botón para confirmar adopción */}
                     <img
                       src={"/adopt1.png"}
-                      className="flex rounded-full w-16 h-auto object-contain ml-auto cursor-pointer"
-                      onClick={() => setSelectedAdopter(adopter)} // Setear el adoptante al hacer click
+                      className="flex w-16 h-auto object-contain ml-auto"
                     />
                   </div>
                 ))}
@@ -200,8 +217,14 @@ const OwnerReports = () => {
 
               {/* Div de confirmación */}
               {selectedAdopter && (
-                <div className=" flex flex-col mt-auto bg-white bg-opacity-5 rounded-3xl p-4 mx-16 items-center justify-center">
-                  <p className="text-white text-center font-fredoka text-md">
+                <div
+                  className=" flex flex-col mt-auto rounded-3xl p-4 mx-16 items-center justify-center"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.4))",
+                  }}
+                >
+                  <p className="text-white text-center font-fredoka text-xl">
                     ¿Confirmas la entrega de {selectedCat.name} a{" "}
                     {selectedAdopter.username}?
                   </p>
