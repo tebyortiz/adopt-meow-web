@@ -10,9 +10,11 @@ import { CatData } from "../models/CatData";
 import Icon from "@mdi/react";
 import { mdiGenderMale, mdiGenderFemale } from "@mdi/js";
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/authContext";
 
 const OwnerMain = () => {
   const { createCat } = useCats();
+  const { user } = useAuth();
   const [image, setImage] = useState<string>("");
   const [selectedType, setSelectedType] = useState<"male" | "female">("male");
   const [name, setName] = useState<string>("");
@@ -100,6 +102,12 @@ const OwnerMain = () => {
     return translations[key]?.[value] || value;
   };
 
+  const translatedSex = selectedType
+    ? translateValue("selectedType", selectedType)
+    : "Desconocido"; // Un valor por defecto en caso de que sea null o undefined
+
+  const translatedCastrated = translateValue("castrated", castrated);
+
   const resetForm = () => {
     setImage("");
     setName("");
@@ -174,7 +182,7 @@ const OwnerMain = () => {
               "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(167, 105, 151, 0.29))",
           }}
         >
-          <div className="py-4 justify-center mb-10 -mt-8">
+          <div className="py-4 justify-center mb-5 -mt-8">
             <p
               className="mb-2 font-fredoka text-2xl text-transparent bg-clip-text"
               style={{
@@ -214,11 +222,12 @@ const OwnerMain = () => {
                   type="text"
                   size="lg"
                   color="secondary"
-                  placeholder="Nombre del gatito/a"
+                  placeholder="Nombre del gatito/a. Máximo 15 carácteres"
                   labelPlacement="outside"
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
                   value={name}
+                  maxLength={15}
                   onChange={(e) => handleNameChange(e.target.value)}
                 />
               </div>
@@ -348,11 +357,12 @@ const OwnerMain = () => {
                   type="text"
                   size="lg"
                   color="secondary"
-                  placeholder="Escríbelas separadas por ,"
+                  placeholder="Escríbelas separadas por , Máx. 50 carácteres"
                   labelPlacement="outside"
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
                   value={vaccine}
+                  maxLength={50}
                   onChange={(e) => handleVaccineChange(e.target.value)}
                 />
               </div>
@@ -365,11 +375,12 @@ const OwnerMain = () => {
                   type="text"
                   size="lg"
                   color="secondary"
-                  placeholder="¿de qué se debe cuidar al gatito?"
+                  placeholder="¿de qué se debe cuidar al gatito? Máx. 200 carácteres"
                   labelPlacement="outside"
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
                   value={care}
+                  maxLength={200}
                   onChange={(e) => handleCareChange(e.target.value)}
                 />
               </div>
@@ -382,11 +393,12 @@ const OwnerMain = () => {
                   type="text"
                   size="lg"
                   color="secondary"
-                  placeholder="¿cómo es el gatito?"
+                  placeholder="¿cómo es el gatito? Máx. 200 carácteres"
                   labelPlacement="outside"
                   variant="bordered"
                   className="mb-0 text-white font-fredoka font-semibold"
                   value={description}
+                  maxLength={200}
                   onChange={(e) => handleDescriptionChange(e.target.value)}
                 />
               </div>
@@ -406,8 +418,13 @@ const OwnerMain = () => {
               "linear-gradient(to right, rgba(225, 0, 255, 0.4), rgba(127, 0, 255, 0.4))",
           }}
         >
-          <div className="flex items-center justify-center font-fredoka text-xl">
+          <div className="flex items-center justify-center font-fredoka text-xl gap-4">
             Visualizar Michiperfil
+            <img
+                src={"/search-icon.png"}
+                alt="Escudo"
+                className="h-10 w-auto"
+              />
           </div>
         </NextUIButton>
       </div>
@@ -416,47 +433,134 @@ const OwnerMain = () => {
       {isPreviewVisible && (
         <div className="flex flex-col w-1/2 space-y-4">
           <div
-            className="p-4 h-[85vh] rounded-3xl backdrop-blur-xl ml-4"
+            className="p-4 h-[85vh] rounded-3xl backdrop-blur-xl ml-4 flex flex-col"
             style={{
               background:
                 "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(167, 105, 151, 0.29))",
             }}
           >
-            <div className="p-4 bg-white bg-opacity-5 rounded-3xl h-auto space-y-4 mt-36 mx-16">
-              <img
-                src={image}
-                alt="Foto"
-                className="rounded-full h-48 w-48 border-2 border-white shadow-lg object-cover m-auto"
-              />
-              <div className="p-4 bg-white bg-opacity-5 rounded-3xl mx-16 space-y-2 ">
-                <p className="text-white font-fredoka text-md">
-                  Nombre: {name}
-                </p>
-                <p className="text-white font-fredoka text-md">Edad: {age}</p>
-                <p className="text-white font-fredoka text-md">
-                  Peso: {selectedWeight}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Sexo: {translateValue("selectedType", selectedType)}
-                </p>
+            <div
+              className="flex flex-row items-center rounded-2xl mx-16 border-2 mt-4 border-white border-opacity-40"
+              style={{
+                background:
+                  "linear-gradient(to left, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.6))",
+              }}
+            >
+              <img src={"/medal.png"} alt="Escudo" className="h-20 w-auto" />
+              <p className="text-white font-fredoka text-2xl">
+                Michiperfil de {name}
+              </p>
+            </div>
+            <div className=" p-4 bg-[#f1f1f4] rounded-2xl h-auto space-y-4 mt-4 mx-16">
+              <div className="flex flex-row items-end gap-2">
+                {/* Imagen alineada a la izquierda */}
+                <img
+                  src={image}
+                  alt="Foto"
+                  className="rounded-full h-32 w-32 border-3 border-secondary border-opacity-40 shadow-lg object-cover"
+                />
 
-                <p className="text-white font-fredoka text-md">
-                  Castrado/a?: {translateValue("castrated", castrated)}
+                {/* Contenedor de los textos alineados hacia abajo */}
+                <div className="flex flex-col space-y-2 self-end">
+                  <div className="flex flex-row gap-2">
+                    <p
+                      className={`text-white rounded-full p-2 font-fredoka text-md ${
+                        translatedSex === "Hembra"
+                          ? "bg-[#fdb4cb]"
+                          : "bg-[#81bceb]"
+                      }`}
+                    >
+                      {translatedSex}
+                    </p>
+                    <p className="text-[#626262] bg-white rounded-full p-2 font-fredoka text-md">
+                      Edad: {age} {age === "1" ? "año" : "años"}
+                    </p>
+                  </div>
+                  <div className="flex flex-row gap-2">
+                    <p className="text-[#626262] bg-white rounded-full p-2 font-fredoka text-md">
+                      Peso: {selectedWeight}
+                    </p>
+                    <p className="text-[#626262] bg-white rounded-full p-2 font-fredoka text-md">
+                      Castrado/a?:
+                    </p>
+                    <p
+                      className={`text-white rounded-full p-2  font-fredoka text-md ${
+                        translatedCastrated === "Sí"
+                          ? "bg-[#d0e6a5] px-4"
+                          : "bg-[#ff6d6d] px-3"
+                      }`}
+                    >
+                      {translatedCastrated}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col bg-white rounded-2xl p-2">
+                <p className="text-secondary text-opacity-60 font-fredoka text-xl mb-1">
+                  Descripción:
                 </p>
-                <p className="text-white font-fredoka text-md">
-                  Vacunas: {vaccine}
+                <p className="text-[#626262] font-fredoka text-md">
+                  {description}
                 </p>
-                <p className="text-white font-fredoka text-md">
-                  Cuidados Especiales: {care}
+              </div>
+              <div className="flex flex-col bg-white rounded-2xl p-2">
+                <p className="text-secondary text-opacity-60 font-fredoka text-xl mb-1">
+                  Cuidados Especiales:
                 </p>
-                <p className="text-white font-fredoka text-md">
-                  Descripción: {description}
-                </p>
+                <p className="text-[#626262] font-fredoka text-md">{care}</p>
+              </div>
+              <div className="flex flex-row space-x-2">
+                <div className="bg-[#fff78c] w-1/2 rounded-xl p-2">
+                  <div className="flex flex-row">
+                    <div className="flex flex-col mr-2">
+                      <p className="text-primary font-fredoka text-md">
+                        Vacunas:
+                      </p>
+                      <img
+                        src={"/shield.png"}
+                        alt="Escudo"
+                        className="h-16 w-auto"
+                      />
+                    </div>
+
+                    <div className="flex flex-col text-[#626262] font-fredoka text-md space-y-1">
+                      {vaccine.split(",").map((vacuna, index) => (
+                        <p key={index}>{vacuna.trim()}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* DATOS DE getUserById */}
+
+                <div className="bg-secondary bg-opacity-60 w-1/2 rounded-xl p-2">
+                  <div className="flex flex-col space-y-2">
+                    <p className="text-white font-fredoka text-md">
+                      Ofrecido/a por:
+                    </p>
+                    <div className="flex flex-row gap-2">
+                      <img
+                        src={user?.image}
+                        alt="Dueño"
+                        className="rounded-full h-12 w-12 border-2 border-whitey shadow-xl object-cover"
+                      />
+                      <div className="flex flex-col">
+                        <p className="text-white font-fredoka text-md">
+                          {user?.username}
+                        </p>
+                        <p className="text-white font-fredoka text-sm">
+                          {user?.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Botón para Publicar gatito */}
+          {/* Botón para aplicar a la postulación */}
           <NextUIButton
             onPress={handleSubmit}
             color="secondary"
@@ -468,8 +572,13 @@ const OwnerMain = () => {
                 "linear-gradient(to right, rgba(225, 0, 255, 0.4), rgba(127, 0, 255, 0.4))",
             }}
           >
-            <div className="flex items-center justify-center font-fredoka text-xl">
-              Postular
+            <div className="flex items-center justify-center font-fredoka text-xl gap-4">
+              Publicar la Adopción de {name}
+              <img
+                src={"/plus-blue.png"}
+                alt="Escudo"
+                className="h-10 w-auto"
+              />
             </div>
           </NextUIButton>
         </div>
