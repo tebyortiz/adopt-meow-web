@@ -25,11 +25,19 @@ const AdopterMain = () => {
     return translations[key]?.[value] || value;
   };
 
+  const translatedSex = selectedCat?.sex
+    ? translateValue("selectedType", selectedCat.sex)
+    : "Desconocido"; // Un valor por defecto en caso de que sea null o undefined
+
+  const translatedCastrated = selectedCat
+    ? translateValue("castrated", selectedCat.castrated)
+    : null;
+
   const handlePreviewClick = (cat: CatData) => {
     console.log("Gatito seleccionado:", cat);
     setSelectedCat(cat);
     setIsPreviewVisible(true);
-  
+
     // Ejecutar fetchOwnerData inmediatamente después de actualizar el estado
     setTimeout(() => {
       if (cat.ownerId) {
@@ -94,9 +102,9 @@ const AdopterMain = () => {
         setOwnerData(null);
       }
     };
-  
+
     fetchOwnerData();
-  }, [selectedCat]);  
+  }, [selectedCat]);
 
   const handleAdopt = async () => {
     const adopterId = await localStorage.getItem("userId");
@@ -166,67 +174,140 @@ const AdopterMain = () => {
                 "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(167, 105, 151, 0.29))",
             }}
           >
-            <div className="p-4 bg-white bg-opacity-5 rounded-3xl h-auto space-y-4 mt-8 mx-16">
-              <img
-                src={selectedCat.image}
-                alt="Foto"
-                className="rounded-full h-36 w-36 border-2 border-white shadow-lg object-cover m-auto"
-              />
-              <div className="p-4 bg-white bg-opacity-5 rounded-3xl mx-16 space-y-2 ">
-                <p className="text-white font-fredoka text-md">
-                  Nombre: {selectedCat.name}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Edad: {selectedCat.age}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Peso: {selectedCat.weight}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Sexo: {translateValue("selectedType", selectedCat.sex)}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Castrado/a?:{" "}
-                  {translateValue("castrated", selectedCat.castrated)}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Vacunas: {selectedCat.vaccinations}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Cuidados Especiales: {selectedCat.specialCare}
-                </p>
-                <p className="text-white font-fredoka text-md">
-                  Descripción: {selectedCat.description}
-                </p>
-              </div>
+            <div
+              className="flex flex-row items-center rounded-2xl mx-16 border-2 mt-4 border-white border-opacity-40"
+              style={{
+                background:
+                  "linear-gradient(to left, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.6))",
+              }}
+            >
+              <img src={"/medal.png"} alt="Escudo" className="h-20 w-auto" />
+              <p className="text-white font-fredoka text-2xl">
+                Michiperfil de {selectedCat.name}
+              </p>
+            </div>
+            <div className=" p-4 bg-[#f1f1f4] rounded-2xl h-auto space-y-4 mt-4 mx-16">
+              <div className="flex flex-row items-end gap-2">
+                {/* Imagen alineada a la izquierda */}
+                <img
+                  src={selectedCat.image}
+                  alt="Foto"
+                  className="rounded-full h-32 w-32 border-3 border-secondary border-opacity-40 shadow-lg object-cover"
+                />
 
-              {/* DATOS DE getUserById */}
-              {ownerData && (
-                <div className="flex flex-col bg-white bg-opacity-5 rounded-3xl p-4 mx-16 space-y-2">
-                  <p className="text-white font-fredoka text-md">
-                    Postulado por:
-                  </p>
-                  <div className="flex items-center space-x-4">
-                    <img
-                      src={ownerData.image}
-                      alt="Dueño"
-                      className="rounded-full h-16 w-16 border-2 border-white shadow-lg object-cover"
-                    />
-                    <p className="text-white font-fredoka text-md">
-                      {ownerData.username}
+                {/* Contenedor de los textos alineados hacia abajo */}
+                <div className="flex flex-col space-y-2 self-end">
+                  <div className="flex flex-row gap-2">
+                    <p
+                      className={`text-white rounded-full p-2 font-fredoka text-md ${
+                        translatedSex === "Hembra"
+                          ? "bg-[#fdb4cb]"
+                          : "bg-[#81bceb]"
+                      }`}
+                    >
+                      {translatedSex}
+                    </p>
+                    <p className="text-[#626262] bg-white rounded-full p-2 font-fredoka text-md">
+                      Edad: {selectedCat.age}{" "}
+                      {selectedCat.age === 1 ? "año" : "años"}
+                    </p>
+                  </div>
+                  <div className="flex flex-row gap-2">
+                    <p className="text-[#626262] bg-white rounded-full p-2 font-fredoka text-md">
+                      Peso: {selectedCat.weight}
+                    </p>
+                    <p className="text-[#626262] bg-white rounded-full p-2 font-fredoka text-md">
+                      Castrado/a?:
+                    </p>
+                    <p
+                      className={`text-white rounded-full p-2  font-fredoka text-md ${
+                        translatedCastrated === "Sí"
+                          ? "bg-[#d0e6a5] px-4"
+                          : "bg-[#ff6d6d] px-3"
+                      }`}
+                    >
+                      {translatedCastrated}
                     </p>
                   </div>
                 </div>
-              )}
+              </div>
+
+              <div className="flex flex-col bg-white rounded-2xl p-2">
+                <p className="text-secondary text-opacity-60 font-fredoka text-xl mb-1">
+                  Descripción:
+                </p>
+                <p className="text-[#626262] font-fredoka text-md">
+                  {selectedCat.description}
+                </p>
+              </div>
+              <div className="flex flex-col bg-white rounded-2xl p-2">
+                <p className="text-secondary text-opacity-60 font-fredoka text-xl mb-1">
+                  Cuidados Especiales:
+                </p>
+                <p className="text-[#626262] font-fredoka text-md">
+                  {selectedCat.specialCare}
+                </p>
+              </div>
+              <div className="flex flex-row space-x-2">
+                <div className="bg-[#fff78c] w-1/2 rounded-xl p-2">
+                  <div className="flex flex-row">
+                    <div className="flex flex-col mr-2">
+                      <p className="text-primary font-fredoka text-md">
+                        Vacunas:
+                      </p>
+                      <img
+                        src={"/shield.png"}
+                        alt="Escudo"
+                        className="h-16 w-auto"
+                      />
+                    </div>
+
+                    <div className="flex flex-col text-[#626262] font-fredoka text-md space-y-1">
+                      {selectedCat.vaccinations
+                        .split(",")
+                        .map((vacuna, index) => (
+                          <p key={index}>{vacuna.trim()}</p>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* DATOS DE getUserById */}
+                {ownerData && (
+                  <div className="bg-secondary bg-opacity-60 w-1/2 rounded-xl p-2">
+                    <div className="flex flex-col space-y-2">
+                      <p className="text-white font-fredoka text-md">
+                        Ofrecido/a por:
+                      </p>
+                      <div className="flex flex-row gap-2">
+                        <img
+                          src={ownerData.image}
+                          alt="Dueño"
+                          className="rounded-full h-12 w-12 border-2 border-secondary shadow-xl object-cover"
+                        />
+                        <div className="flex flex-col">
+                          <p className="text-white font-fredoka text-md">
+                            {ownerData.username}
+                          </p>
+                          <p className="text-white font-fredoka text-sm">
+                            {ownerData.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Texto alineado en la parte inferior */}
-            <div className="mx-8 text-center mt-auto">
-              <p className="text-white font-fredoka font-light text-md">
+            <div className="flex flex-row -mx-4 -mb-4 text-center items-center justify-center mt-auto bg-white bg-opacity-5 rounded-2xl p-4 gap-2">
+              <p className="text-white font-fredoka text-lg">
                 Si deseas adoptar a {selectedCat.name}, te pedimos total
                 responsabilidad para su adopción, respetando sus cuidados
                 especiales, y brindándole mucho amor!
               </p>
+              <img src={"/message1.png"} alt="Escudo" className="h-12 w-auto" />
             </div>
           </div>
 
@@ -242,8 +323,13 @@ const AdopterMain = () => {
                 "linear-gradient(to right, rgba(225, 0, 255, 0.4), rgba(127, 0, 255, 0.4))",
             }}
           >
-            <div className="flex items-center justify-center font-fredoka text-xl">
+            <div className="flex items-center justify-center font-fredoka text-xl gap-4">
               Postular para la Adopción de {selectedCat.name}
+              <img
+                src={"/circle-plus.png"}
+                alt="Escudo"
+                className="h-10 w-auto transform rotate-[45deg]"
+              />
             </div>
           </NextUIButton>
         </div>

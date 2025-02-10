@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Avatar, Divider, Button as NextUIButton } from "@nextui-org/react";
+import { Avatar, Button as NextUIButton } from "@nextui-org/react";
 import { useAuth } from "../context/authContext";
 import { useEffect, useState } from "react";
 
@@ -89,7 +89,6 @@ const Sidebar = () => {
               AdoptMeow
             </motion.p>
           </div>
-          <Divider className="my-4 bg-white opacity-80 h-[1px]" />
         </div>
 
         {/* Secciones del Sidebar */}
