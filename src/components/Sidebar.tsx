@@ -16,6 +16,11 @@ const menuVariants = {
   },
 };
 
+const fadeInEffect = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.9, ease: "easeOut" } },
+};
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
@@ -47,11 +52,7 @@ const Sidebar = () => {
       : userType === "adopter"
       ? [
           { name: "Búsqueda", path: "/adopter-main", icon: "/search-icon.png" },
-          {
-            name: "Mis Postulaciones",
-            path: "/adopter-applications",
-            icon: "/heart.png",
-          },
+          { name: "Mis Postulaciones", path: "/adopter-applications", icon: "/heart.png" },
         ]
       : [];
 
@@ -63,17 +64,12 @@ const Sidebar = () => {
         variants={menuVariants}
         className="h-[95vh] w-full flex flex-col backdrop-blur-xl rounded-3xl shadow-[0_0_10px_rgba(255,255,255,0.2)]"
         style={{
-          background:
-            "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(167, 105, 151, 0.29))",
+          background: "linear-gradient(to top, rgba(75, 0, 130, 0.2), rgba(128, 0, 128, 0.2), rgba(167, 105, 151, 0.29))",
         }}
       >
         <div className="my-4 mx-4 mb-48 p-4 flex flex-col justify-center">
           <div className="flex md:flex-row items-center justify-center mt-4 mb-8">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, staggerChildren: 0.1 }}
-            >
+            <motion.div initial="hidden" animate="visible" variants={fadeInEffect} transition={{ delay: 0.3 }}>
               <Avatar
                 src="/adopt1.png"
                 size="lg"
@@ -81,9 +77,10 @@ const Sidebar = () => {
               />
             </motion.div>
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9, staggerChildren: 0.1 }}
+              initial="hidden"
+              animate="visible"
+              variants={fadeInEffect}
+              transition={{ delay: 0.6 }}
               className="md:ml-2 ml-2 text-inherit text-white md:text-4xl text-xl font-semi-bold font-fredoka"
             >
               AdoptMeow
@@ -93,35 +90,29 @@ const Sidebar = () => {
 
         {/* Secciones del Sidebar */}
         <div className="h-auto space-y-4">
-          {menuItems.map((item) => (
+          {menuItems.map((item, index) => (
             <motion.div
               key={item.path}
               whileTap={{ scale: 0.95 }}
-              animate={
-                selectedSection === item.name
-                  ? { opacity: 1, scale: 1 }
-                  : { opacity: 0.5, scale: 1 }
-              }
+              initial="hidden"
+              animate="visible"
+              variants={fadeInEffect}
+              transition={{ delay: 0.8 + index * 0.2 }}
               className={`flex flex-row items-center p-2 rounded-2xl px-2 mx-4 cursor-pointer transition-all duration-300 ${
-                selectedSection === item.name
-                  ? "bg-white bg-opacity-10"
-                  : "hover:bg-white hover:bg-opacity-5"
+                selectedSection === item.name ? "bg-white bg-opacity-10" : "hover:bg-white hover:bg-opacity-5"
               }`}
               onClick={() => {
                 setSelectedSection(item.name);
                 navigate(item.path);
               }}
             >
-              <img
-                src={item.icon}
-                alt={item.name}
-                className="h-12 w-auto mr-2"
-              />
+              <img src={item.icon} alt={item.name} className="h-12 w-auto mr-2" />
               <p className="text-white font-fredoka text-xl">{item.name}</p>
             </motion.div>
           ))}
         </div>
 
+        {/* Sección del usuario en la parte inferior */}
         {/* Sección del usuario en la parte inferior */}
         {user && (
           <div className="mt-auto mb-4 p-4 flex flex-row items-center bg-white rounded-2xl bg-opacity-10 px-6 mx-4">
@@ -156,7 +147,7 @@ const Sidebar = () => {
             Salir
           </div>
         </NextUIButton>
-      </motion.div>
+    </motion.div>
     </div>
   );
 };

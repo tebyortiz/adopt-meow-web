@@ -15,7 +15,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="relative z-10 h-full overflow-y-scroll scrollbar-hide">
         {children}
       </div>
-      <div className="fixed bottom-0 inset-x-0 md:h-32 h-24 bg-gradient-to-t from-black to-transparent z-20"></div>
     </div>
   );
 };

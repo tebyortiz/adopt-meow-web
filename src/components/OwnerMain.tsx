@@ -4,6 +4,11 @@ import {
   SelectItem,
   Switch,
   Button as NextUIButton,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@nextui-org/react";
 import { useCats } from "../context/CatContext";
 import { CatData } from "../models/CatData";
@@ -11,6 +16,20 @@ import Icon from "@mdi/react";
 import { mdiGenderMale, mdiGenderFemale } from "@mdi/js";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
+import { motion } from "framer-motion";
+
+const cardVariant = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: i * 0.4,
+      duration: 0.8,
+      ease: "easeInOut",
+    },
+  }),
+};
 
 const OwnerMain = () => {
   const { createCat } = useCats();
@@ -28,6 +47,7 @@ const OwnerMain = () => {
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchOwnerId = async () => {
@@ -104,7 +124,7 @@ const OwnerMain = () => {
 
   const translatedSex = selectedType
     ? translateValue("selectedType", selectedType)
-    : "Desconocido"; // Un valor por defecto en caso de que sea null o undefined
+    : "Desconocido";
 
   const translatedCastrated = translateValue("castrated", castrated);
 
@@ -157,11 +177,10 @@ const OwnerMain = () => {
       lat,
       lng,
     };
-    console.log("Datos del formulario:", newCat);
 
     try {
       await createCat(newCat);
-      alert("¡Éxito! El nuevo reporte se ha creado correctamente.");
+      setIsModalOpen(true);
       resetForm();
       setIsPreviewVisible(false);
     } catch (error) {
@@ -174,7 +193,14 @@ const OwnerMain = () => {
 
   return (
     <div className="flex flex-row p-6 h-screen">
-      <div className="flex flex-col w-1/2">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.5 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        variants={cardVariant}
+        className="flex flex-col w-1/2"
+      >
         <div
           className="p-12 h-[85vh] rounded-3xl backdrop-blur-xl mr-4 flex flex-col mb-4"
           style={{
@@ -421,17 +447,24 @@ const OwnerMain = () => {
           <div className="flex items-center justify-center font-fredoka text-xl gap-4">
             Visualizar Michiperfil
             <img
-                src={"/search-icon.png"}
-                alt="Escudo"
-                className="h-10 w-auto"
-              />
+              src={"/search-icon.png"}
+              alt="Escudo"
+              className="h-10 w-auto"
+            />
           </div>
         </NextUIButton>
-      </div>
+      </motion.div>
 
       {/* Previsualización del MichiPerfil */}
       {isPreviewVisible && (
-        <div className="flex flex-col w-1/2 space-y-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ amount: 0.5 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          variants={cardVariant}
+          className="flex flex-col w-1/2 space-y-4"
+        >
           <div
             className="p-4 h-[85vh] rounded-3xl backdrop-blur-xl ml-4 flex flex-col"
             style={{
@@ -453,14 +486,11 @@ const OwnerMain = () => {
             </div>
             <div className=" p-4 bg-[#f1f1f4] rounded-2xl h-auto space-y-4 mt-4 mx-16">
               <div className="flex flex-row items-end gap-2">
-                {/* Imagen alineada a la izquierda */}
                 <img
                   src={image}
                   alt="Foto"
                   className="rounded-full h-32 w-32 border-3 border-secondary border-opacity-40 shadow-lg object-cover"
                 />
-
-                {/* Contenedor de los textos alineados hacia abajo */}
                 <div className="flex flex-col space-y-2 self-end">
                   <div className="flex flex-row gap-2">
                     <p
@@ -581,8 +611,44 @@ const OwnerMain = () => {
               />
             </div>
           </NextUIButton>
-        </div>
+        </motion.div>
       )}
+
+      {/* Modal de confirmación */}
+      <Modal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        backdrop="opaque"
+        size="md"
+      >
+        <ModalContent>
+          <ModalHeader className="flex flex-col items-center justify-center gap-2">
+            <img
+              src="/confirm-label.png"
+              alt="Confirmación"
+              className="w-16 h-16"
+            />
+            <h2 className="text-secondary font-fredoka text-lg text-center">
+              Postulación Exitosa
+            </h2>
+          </ModalHeader>
+          <ModalBody>
+            <p className="text-[#626262] font-fredoka text-lg text-center">
+              Tu Postulación ha sido enviada con éxito. Ahora será visible para
+              todos los usuarios.
+            </p>
+          </ModalBody>
+          <ModalFooter className="flex justify-center">
+            <NextUIButton
+              className="text-white font-fredoka text-lg"
+              color="secondary"
+              onPress={() => setIsModalOpen(false)}
+            >
+              Cerrar
+            </NextUIButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

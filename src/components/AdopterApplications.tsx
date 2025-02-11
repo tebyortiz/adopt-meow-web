@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useCats } from "../context/CatContext";
 import { CatData } from "../models/CatData";
 import { Button as NextUIButton } from "@nextui-org/react";
+import { motion } from "framer-motion";
 
 const AdopterApplications = () => {
   const { getCats, cats, deleteCat, removeAdopter } = useCats();
@@ -101,57 +102,71 @@ const AdopterApplications = () => {
           </div>
 
           <div className="flex flex-col bg-white bg-opacity-5 w-full rounded-3xl flex-1 p-4 space-y-4 px-10">
-          <p className="text-white font-fredoka text-xl text-center mt-4 mb-4">
+            <p className="text-white font-fredoka text-xl text-center mt-4 mb-4">
               Selecciona un gatito para ver el estado de la postulación.
             </p>
-            {adoptedCats.map((cat, index) => (
-              <div
-                key={cat._id}
-                className="flex flex-row rounded-3xl p-2 items-center cursor-pointer hover:bg-opacity-90 transition px-4"
+
+            {adoptedCats.length === 0 ? (
+              <p
+                className="text-white font-fredoka text-lg text-center rounded-3xl p-4 items-center cursor-pointer hover:bg-opacity-90 transition px-4"
                 style={{
                   background:
                     "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
                 }}
-                onClick={() => {
-                  setSelectedCat(cat);
-                  setSelectedStatus(novedadTypes[index]);
-                }}
               >
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="flex rounded-full w-16 h-16 border-2 border-white object-cover"
-                />
-                <p className="text-white font-fredoka text-2xl ml-4">
-                  {cat.name}
-                </p>
+                No tienes postulaciones pendientes de revisión.
+              </p>
+            ) : (
+              adoptedCats.map((cat, index) => (
+                <motion.div
+                  key={cat._id}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex flex-row rounded-3xl p-2 items-center cursor-pointer hover:bg-opacity-90 transition px-4"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
+                  }}
+                  onClick={() => {
+                    setSelectedCat(cat);
+                    setSelectedStatus(novedadTypes[index]);
+                  }}
+                >
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="flex rounded-full w-16 h-16 border-2 border-white object-cover"
+                  />
+                  <p className="text-white font-fredoka text-2xl ml-4">
+                    {cat.name}
+                  </p>
 
-                {/* Estado de la postulación con icono */}
-                <div className="flex ml-auto mr-1">
-                  {novedadTypes[index] === "En Revisión" && (
-                    <img
-                      src="/clock.png"
-                      alt="En Revisión"
-                      className="w-10 h-10 object-contain"
-                    />
-                  )}
-                  {novedadTypes[index] === "Aprobado" && (
-                    <img
-                      src="/confirm.png"
-                      alt="Aprobado"
-                      className="w-12 h-12 object-contain"
-                    />
-                  )}
-                  {novedadTypes[index] === "No Aprobado" && (
-                    <img
-                      src="/denied.png"
-                      alt="No Aprobado"
-                      className="w-10 h-10 object-contain"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
+                  {/* Estado de la postulación con icono */}
+                  <div className="flex ml-auto mr-1">
+                    {novedadTypes[index] === "En Revisión" && (
+                      <img
+                        src="/clock.png"
+                        alt="En Revisión"
+                        className="w-10 h-10 object-contain"
+                      />
+                    )}
+                    {novedadTypes[index] === "Aprobado" && (
+                      <img
+                        src="/confirm.png"
+                        alt="Aprobado"
+                        className="w-12 h-12 object-contain"
+                      />
+                    )}
+                    {novedadTypes[index] === "No Aprobado" && (
+                      <img
+                        src="/denied.png"
+                        alt="No Aprobado"
+                        className="w-10 h-10 object-contain"
+                      />
+                    )}
+                  </div>
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -178,13 +193,13 @@ const AdopterApplications = () => {
             </p>
             {selectedCat && (
               <div className="bg-white bg-opacity-5 p-8 rounded-3xl mx-16 flex flex-col items-center">
-               <div
-                className="flex flex-row items-center justify-center rounded-2xl p-4 gap-4 w-5/6 mb-8 items-center border-2 border-white border-opacity-40"
-                style={{
-                  background:
-                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.4))",
-                }}
-              >
+                <div
+                  className="flex flex-row items-center justify-center rounded-2xl p-4 gap-4 w-5/6 mb-8 items-center border-2 border-white border-opacity-40"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.4))",
+                  }}
+                >
                   <img
                     src={selectedCat.image}
                     alt={selectedCat.name}
@@ -196,11 +211,13 @@ const AdopterApplications = () => {
                 </div>
 
                 {/* Estado con imagen correspondiente */}
-                <div className="flex items-center justify-center rounded-3xl p-8 w-5/6 gap-2 mb-12"
-                style={{
-                  background:
-                    "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
-                }}>
+                <div
+                  className="flex items-center justify-center rounded-3xl p-8 w-5/6 gap-2 mb-12"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(75, 0, 130, 0.3), rgba(128, 0, 128, 0.3), rgba(167, 105, 151, 0.3))",
+                  }}
+                >
                   <p className="text-white font-fredoka text-2xl mr-2">
                     Estado:
                   </p>
