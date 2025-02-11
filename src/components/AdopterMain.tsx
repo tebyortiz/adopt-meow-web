@@ -2,9 +2,30 @@ import { useEffect, useState } from "react";
 import GoogleMapComponent from "./GoogleMapComponent";
 import { useCats } from "../context/CatContext";
 import { CatData } from "../models/CatData";
-import { Button as NextUIButton } from "@nextui-org/react";
+import {
+  Button as NextUIButton,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@nextui-org/react";
 import { useAuth } from "../context/authContext";
 import { UserRegistrationData } from "../models/UserRegistrationData";
+import { motion } from "framer-motion";
+
+const cardVariant = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: i * 0.4,
+      duration: 0.8,
+      ease: "easeInOut",
+    },
+  }),
+};
 
 const AdopterMain = () => {
   const { getCats, applyAdoption, cats } = useCats();
@@ -15,6 +36,7 @@ const AdopterMain = () => {
   const [selectedCat, setSelectedCat] = useState<CatData | null>(null);
   const [ownerData, setOwnerData] = useState<UserRegistrationData | null>(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const translateValue = (key: string, value: string) => {
     const translations: Record<string, Record<string, string>> = {
@@ -27,22 +49,19 @@ const AdopterMain = () => {
 
   const translatedSex = selectedCat?.sex
     ? translateValue("selectedType", selectedCat.sex)
-    : "Desconocido"; // Un valor por defecto en caso de que sea null o undefined
+    : "Desconocido";
 
   const translatedCastrated = selectedCat
     ? translateValue("castrated", selectedCat.castrated)
     : null;
 
   const handlePreviewClick = (cat: CatData) => {
-    console.log("Gatito seleccionado:", cat);
     setSelectedCat(cat);
     setIsPreviewVisible(true);
 
-    // Ejecutar fetchOwnerData inmediatamente después de actualizar el estado
     setTimeout(() => {
       if (cat.ownerId) {
         getUserById(cat.ownerId).then((owner) => {
-          console.log("Dueño cargado en handlePreviewClick:", owner);
           setOwnerData(owner || null);
         });
       }
@@ -89,10 +108,8 @@ const AdopterMain = () => {
   useEffect(() => {
     const fetchOwnerData = async () => {
       if (selectedCat?.ownerId) {
-        console.log("Obteniendo datos del dueño con ID:", selectedCat.ownerId);
         try {
           const owner = await getUserById(selectedCat.ownerId);
-          console.log("Datos del dueño recibidos:", owner);
           setOwnerData(owner || null);
         } catch (error) {
           console.error("Error fetching owner data:", error);
@@ -112,7 +129,7 @@ const AdopterMain = () => {
 
     if (catId && adopterId) {
       await applyAdoption(catId, adopterId);
-      alert("¡Éxito! Se aplicó la postulación correctamente.");
+      setIsModalOpen(true);
       setIsPreviewVisible(false);
     } else {
       console.error("El ID del gatito o del adoptante no está definido");
@@ -121,7 +138,14 @@ const AdopterMain = () => {
 
   return (
     <div className="flex flex-row p-6 h-screen">
-      <div className="flex flex-col w-1/2">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.5 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        variants={cardVariant}
+        className="flex flex-col w-1/2"
+      >
         <div
           className="p-12 h-screen rounded-3xl backdrop-blur-xl mr-4 flex flex-col"
           style={{
@@ -149,7 +173,14 @@ const AdopterMain = () => {
           </div>
 
           {/* Mapa */}
-          <div className="bg-white bg-opacity-5 w-full rounded-3xl flex-1 flex flex-col p-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ amount: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            variants={cardVariant}
+            className="bg-white bg-opacity-5 w-full rounded-3xl flex-1 flex flex-col p-8"
+          >
             {lat !== null && lng !== null ? (
               <GoogleMapComponent
                 userLat={lat}
@@ -160,13 +191,20 @@ const AdopterMain = () => {
             ) : (
               <p className="text-white text-center">Cargando mapa...</p>
             )}
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* MichiPerfil */}
       {isPreviewVisible && selectedCat && (
-        <div className="flex flex-col w-1/2 space-y-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ amount: 0.5 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          variants={cardVariant}
+          className="flex flex-col w-1/2 space-y-4"
+        >
           <div
             className="p-4 h-[85vh] rounded-3xl backdrop-blur-xl ml-4 flex flex-col justify-between"
             style={{
@@ -188,7 +226,6 @@ const AdopterMain = () => {
             </div>
             <div className=" p-4 bg-[#f1f1f4] rounded-2xl h-auto space-y-4 mt-4 mx-16">
               <div className="flex flex-row items-end gap-2">
-                {/* Imagen alineada a la izquierda */}
                 <img
                   src={selectedCat.image}
                   alt="Foto"
@@ -332,8 +369,43 @@ const AdopterMain = () => {
               />
             </div>
           </NextUIButton>
-        </div>
+        </motion.div>
       )}
+      {/* Modal de confirmación */}
+      <Modal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        backdrop="opaque"
+        size="md"
+      >
+        <ModalContent>
+          <ModalHeader className="flex flex-col items-center justify-center gap-2">
+            <img
+              src="/confirm-label.png"
+              alt="Confirmación"
+              className="w-16 h-16"
+            />
+            <h2 className="text-secondary font-fredoka text-lg text-center">
+              Postulación Exitosa
+            </h2>
+          </ModalHeader>
+          <ModalBody>
+            <p className="text-[#626262] font-fredoka text-lg text-center">
+              Tu solicitud de adopción para <b>{selectedCat?.name}</b> ha sido
+              enviada con éxito. El dueño revisará tu postulación pronto.
+            </p>
+          </ModalBody>
+          <ModalFooter className="flex justify-center">
+            <NextUIButton
+              className="text-white font-fredoka text-lg"
+              color="secondary"
+              onPress={() => setIsModalOpen(false)}
+            >
+              Cerrar
+            </NextUIButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
