@@ -24,7 +24,7 @@ Mediante esta app, se intenta agilizar el *esfuerzo de adopción* por parte de l
 #### Interfaz de Usuarios No Registrados
 Luego de iniciar la aplicación, se muestra la pantalla "Landing Page" que muestra las principales funciones de la aplicación, y se incentiva a los usuarios a registrarse, con una re-dirección a la pantalla de Registro. En la pantalla de Registro se muestra un formulario, donde los usuarios deberán completar los campos con sus datos, y elegir el tipo de Usuario (Propietario="owner", Adoptante="Adopter"). En caso de no completar el formulario, o proporcionarse datos erróneos, la Api devolverá el mensaje de error, que se renderizará en pantalla.
 
-[![register.png](https://i.postimg.cc/T20FvVg2/register.png)](https://postimg.cc/LhqNzZxG)
+[![user-register.png](https://i.postimg.cc/mk40TV2V/user-register.png)](https://postimg.cc/2bHHwQWB)
 
 #### Interfaz de Usuarios Registrados
 Una vez el usuario registrado, puede hacer el login en la sección homónima, donde deberá proporcionar el correo y contraseña con los que se registró. En caso de proporcionarse datos erróneos, la Api devolverá un mensaje de error, que se renderizará en pantalla.
@@ -40,7 +40,7 @@ Esta Interfaz posee las secciones "Postular" y "Reportes", con una primer pantal
 
 [![owner-main.png](https://i.postimg.cc/BnRQc9nz/owner-main.png)](https://postimg.cc/sM9rsLSP)
 
-**Sección "Reportes":** Es la segunda sección, sque muestra el listado de gatitos "publicados" por el usuario y la cantidad de usuarios que postularon para su adopción. Si no hay gatitos publicados, se mostrará un texto informando esto. Caso contrario, al seleccionar algún gatito del listado, se despliega la segunda pantalla, mostrando el listado de usuarios que aplicaron para la adopción del gatito seleccionado. Al hacer click sobre algún usuario, aparece un cuadro para la aprobación de la adopción, y tiene 2 botones: "Entregar" que hará que el gatito desaparezca del listado, y se visualizará un modal confirmando la entrega, y el boton de "Cancelar" para para cerrar el cuadro.
+**Sección "Reportes":** Es la segunda sección, que muestra el listado de gatitos "publicados" por el usuario y la cantidad de usuarios que postularon para su adopción. Si no hay gatitos publicados, se mostrará un texto informando esto. Caso contrario, al seleccionar algún gatito del listado, se despliega la segunda pantalla, mostrando el listado de usuarios que aplicaron para la adopción del gatito seleccionado. Al hacer click sobre algún usuario, aparece un cuadro para la aprobación de la adopción, y tiene 2 botones: "Entregar" que hará que el gatito desaparezca del listado, y se visualizará un modal confirmando la entrega, y el boton de "Cancelar" para para cerrar el cuadro.
 
 [![owner-reports.png](https://i.postimg.cc/ZYjbsyqp/owner-reports.png)](https://postimg.cc/Hjc1VnXk)
 
