@@ -42,7 +42,7 @@ Esta Interfaz posee las secciones "Postular" y "Reportes", con una primer pantal
 
 **Sección "Reportes":** Es la segunda sección, que muestra el listado de gatitos "publicados" por el usuario y la cantidad de usuarios que postularon para su adopción. Si no hay gatitos publicados, se mostrará un texto informando esto. Caso contrario, al seleccionar algún gatito del listado, se despliega la segunda pantalla, mostrando el listado de usuarios que aplicaron para la adopción del gatito seleccionado. Al hacer click sobre algún usuario, aparece un cuadro para la aprobación de la adopción, y tiene 2 botones: "Entregar" que hará que el gatito desaparezca del listado, y se visualizará un modal confirmando la entrega, y el boton de "Cancelar" para para cerrar el cuadro.
 
-[![owner-reports.png](https://i.postimg.cc/ZYjbsyqp/owner-reports.png)](https://postimg.cc/Hjc1VnXk)
+[![reports-owner2.png](https://i.postimg.cc/pTSJZL3j/reports-owner2.png)](https://postimg.cc/5Ywz9b49)
 
 #### Interfaz de ADOPTERS
 Esta Interfaz posee las secciones "Búsqueda" y "Mis Postulaciones", con una primer pantalla (primer mitad de pantalla), y una segunda pantalla, que se desplegará según las acciones llevadas a cabo en la primer pantalla.
